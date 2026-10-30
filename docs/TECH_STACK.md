@@ -45,4 +45,4 @@
 - Playwright makes the "live runtime" limb real -- the chimera is source analysis vs a browser that actually drives the app, not two text-based scanners.
 - MCP at runtime makes the agentic loop real (the LLM picks attack tools via MCP), not a scripted pipeline.
 - BYO LLM keeps the tool useful to any developer's stack; the provider-adapter layer keeps it vendor-agnostic.
-- Python + FastAPI fits security and agent orchestration, and matches the stack the 2025 Frankenstein winner used.
+- Python + FastAPI fits security and agent orchestration.

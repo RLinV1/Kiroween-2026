@@ -87,7 +87,7 @@ User Story: As a developer, I want findings visualized as ghosts on the creature
 User Story: As the builder, I want deep, honest Kiro usage, because it is a major scoring lever and a required writeup.
 9.1. Spec-driven development for the UI (structured requirements/design/tasks).
 9.2. Vibe coding for the red-team/agent logic (iterative, abstract) -- documented as the inverted pattern with explicit reasoning.
-9.3. An agent hook that auto-generates a new attack-class/check rule when added to a spec (the proven 2025 winning pattern).
+9.3. An agent hook that auto-generates a new attack-class/check rule when added to a spec.
 9.4. MCP connecting Kiro to threat-intel/reference data during the build.
 9.5. Steering docs enforcing detection/attack-rule consistency and architecture.
 9.6. Property-based testing verifying detection rules do not false-positive and that mitigations hold against property-based attacks.

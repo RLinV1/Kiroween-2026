@@ -173,8 +173,8 @@ Blue team (defend):
 ## 15. Kiro Integration
 
 - Spec-driven development for the UI (this requirements/design/tasks workflow).
-- Vibe coding for the orchestrator and ghost logic (iterative, abstract) -- documented as the inverted pattern with explicit reasoning, echoing the proven 2025 approach.
-- Agent hook: on spec update, auto-generate a new ghost/MCP tool skeleton plus its detection rule (the 2025 winning pattern).
+- Vibe coding for the orchestrator and ghost logic (iterative, abstract) -- documented as the inverted pattern with explicit reasoning.
+- Agent hook: on spec update, auto-generate a new ghost/MCP tool skeleton plus its detection rule.
 - MCP (dev-time): Kiro connects to security reference data (OWASP/MITRE/NVD docs) during the build.
 - MCP (runtime): the ghost crew itself is an MCP server -- the agentic core uses MCP at runtime, doubling the MCP story.
 - Steering docs: architecture, attack-rule consistency, code style.
