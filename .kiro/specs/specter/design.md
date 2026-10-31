@@ -1,4 +1,4 @@
-﻿# Specter -- Design
+﻿# Kage Crew -- Design
 
 ## 1. Goals & Non-Goals
 
@@ -94,7 +94,7 @@ Visual identity: dark mode, phosphor-glow / haunted aesthetic, ghost sprites, br
 
 ## 6. The Ghost Crew as MCP Tools + LLM Orchestrator (agentic core)
 
-This is the Frankenstein and agentic heart of Specter. The attack capabilities are modeled as MCP tools, and an LLM orchestrator selects and invokes them based on the user's spoken intent.
+This is the Frankenstein and agentic heart of Kage Crew. The attack capabilities are modeled as MCP tools, and an LLM orchestrator selects and invokes them based on the user's spoken intent.
 
 MCP tools exposed by the ghost-crew server:
 - ghosts/static_analyzer -- analyzes the target's prompt flow for injection paths (untrusted input -> model, overridable system prompts, unguarded tool calls).

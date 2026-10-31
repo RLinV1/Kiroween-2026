@@ -2,7 +2,7 @@
 
 ## The chimera (why it is a Frankenstein)
 
-Specter stitches incompatible security paradigms that normally live in separate tools:
+Kage Crew combines security approaches that normally live in separate tools:
 
 - Static source analysis (deterministic, no AI) -- what the code IS.
 - Live runtime driving via Playwright (a browser agent that clicks/types/reads) -- what the app DOES.

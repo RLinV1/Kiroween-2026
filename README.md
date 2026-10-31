@@ -1,4 +1,4 @@
-﻿# Specter
+﻿# Kage Crew
 
 An AI red-teaming and blue-teaming workbench for the agentic-AI era. A Frankenstein that stitches incompatible security paradigms into one autonomous crew that attacks your AI app, then defends it.
 
@@ -8,16 +8,16 @@ Built for **Kiroween 2026** (Frankenstein category).
 
 Over the last few weeks alone, attackers have targeted AI infrastructure directly. The October 2026 Railway breach went after AI provider API keys as part of what Railway called a coordinated campaign against AI inference providers; a poisoned LiteLLM release hit the AI tooling ecosystem in the same window. As developers move to agentic development (AI agents, MCP servers, RAG pipelines), they inherit a brand-new attack surface that traditional security scanners were never built to test.
 
-## What Specter does
+## What Kage Crew does
 
-Specter is a multi-tenant workbench where developers bring their own LLM (OpenAI, Anthropic, Gemini, or any compatible provider) and their own RAG knowledge base, then unleash an autonomous "ghost crew" to assault their own AI app, see what breaks with proof, and defend it.
+Kage Crew is an AI security workbench where code-scanning and Playwright agents inspect a project and its running website. Ghosts traverse a graph of observed files and pages, report evidence-backed findings, and narrate their work through ElevenLabs.
 
 - **Red team (attack):** the ghost crew attacks your system across stitched paradigms, iterating until it breaks or an attack budget is exhausted. Every finding ships with proof.
 - **Blue team (defend):** each finding surfaces a suggested mitigation. You apply it, and the orchestrator re-invokes the relevant ghost to confirm the fix holds. Exorcised (fixed) vs. persists (still vulnerable).
 
-## Why Specter is a Frankenstein
+## Why Kage Crew is a Frankenstein
 
-Specter stitches together genuinely incompatible paradigms that normally live in separate tools:
+Kage Crew stitches together different security approaches that normally live in separate tools:
 
 1. **Static source-code analysis** (deterministic, no AI) -- what the code IS.
 2. **Live runtime driving via Playwright** (a browser agent that actually clicks, types, and reads responses) -- what the app DOES.
@@ -70,6 +70,7 @@ Built with Kiro and demonstrating deep, honest usage: spec-driven development fo
 - [docs/TECH_STACK.md](docs/TECH_STACK.md)
 - [docs/MILESTONES.md](docs/MILESTONES.md)
 - [docs/KIRO_USAGE.md](docs/KIRO_USAGE.md)
+- [MVP brainstorming](docs/MVP_BRAINSTORM.md) and [four-week scope](docs/MILESTONES.md)
 - `.kiro/specs/specter/` -- requirements and design
 
 ## License
