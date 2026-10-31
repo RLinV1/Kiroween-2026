@@ -44,6 +44,8 @@ Ghosts emerge at scan start and travel to the nodes being checked. A finding pul
 
 The complete demo should take about three minutes and work from the submitted URL without judge credentials or setup. Deployment and a real hosted Playwright run are proved in the first two days, before graph polish. Development and testing remain possible locally. The hosted environment scans only the bundled target; arbitrary website scanning is outside this MVP.
 
+The month plan is: weeks one and two deliver the complete deployed attack/evidence/defense/retest loop; weeks three and four stabilize that experience, add optional narration and polish where time allows, then prepare the submission. Success is a reliable judge demo, not a larger attack catalog.
+
 ## Builder decisions
 
 - Choose one stable model provider and a hard limit of a few attack attempts; use a small reliable roster of code/browser checks as supporting scope.

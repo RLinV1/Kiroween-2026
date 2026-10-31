@@ -6,6 +6,21 @@ Kage Crew is a web security demo centered on an agentic prompt-injection attack.
 
 The MVP is a bounded sweep. Map the prompt-injection finding to relevant OWASP Top 10 for LLM Applications guidance, and conventional code/browser checks to the OWASP Top 10 for Web Applications where relevant. Do not claim full coverage of either list or guarantee security.
 
+## One-month overview
+
+By the end of the month, deliver a judge-ready Kage Crew demo on Google Cloud Run. Its centerpiece is a real, bounded LLM attack agent using Playwright against the bundled AI chat target; the judge can watch the crew in the graph, inspect evidence, apply the prepared defense, and retest. Small source checks, OWASP mapping, and optional ElevenLabs narration round out the experience. The target remains fixed and synthetic so the demo is safe, affordable, and repeatable.
+
+The first two weeks are for getting the complete core loop working and publicly deployed. Weeks three and four are for making that same loop reliable, understandable, and polished—not for expanding into arbitrary targets or a broad scanner.
+
+| Period | Outcome |
+|---|---|
+| **Week 1** | Prove Cloud Run can run the bundled site and Playwright; build the bounded adaptive attack, canary verdict, and one code check. |
+| **Week 2** | Complete the graph, evidence, prepared mitigation, and retest; reach a usable public demo URL. |
+| **Week 3** | Harden the hosted flow, improve error states and animation/accessibility, and add ElevenLabs narration if the core path is stable. |
+| **Week 4** | Test from a clean browser/device, control model spend, fix deployment issues, and prepare the submission/demo walkthrough. |
+
+**End-of-month success:** a judge can open the URL without setup, watch the agent attack through Playwright, see a verified finding on the graph, apply the sample defense, and retest successfully in about three minutes.
+
 ## Demo design
 
 The submission URL opens a working hosted demo. The judge clicks **Start demo attack** and sees a prompt-injection agent choose attempts, Playwright submit them to the bundled vulnerable AI chat page, and a bounded follow-up adapt to the observed response. The model proposes attacks; a deterministic canary check verifies whether the synthetic secret leaked. A small code-check ghost scans the bundled source in the same run. Findings show the page/file, prompt or check, observed evidence, a relevant OWASP category, and a suggested fix. A prepared mitigation can be applied and the same attack rerun.
