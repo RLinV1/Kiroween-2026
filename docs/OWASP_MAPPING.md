@@ -2,6 +2,8 @@
 
 Kage Crew uses the **OWASP Top 10 for LLM Applications 2026** as its primary guide for the agentic AI attack. The guide provides the risk taxonomy and attack/mitigation context; the MVP implements a narrow, evidence-backed test against its bundled target, not a complete OWASP scanner.
 
+The interface should show all ten LLM risk categories as a coverage map. Mark the categories the MVP actually tests with their checks and evidence; mark the rest **Not tested in this demo**. A visible category is not a claim that Kage Crew tests it.
+
 | OWASP risk | How Kage Crew uses it | MVP evidence |
 |---|---|---|
 | **LLM01:2026 Prompt Injection** | Primary attack class. The agent sends crafted direct prompts intended to override the bundled chat app's instructions, observes the response through Playwright, and may choose a bounded follow-up. | Prompt and response transcript, observed target page, and whether the target violated the prepared rule or exposed the canary. |

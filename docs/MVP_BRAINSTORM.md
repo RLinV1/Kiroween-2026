@@ -25,6 +25,7 @@ Build a judge-ready web demo of Kage Crew in two weeks, centered on an agentic p
 - Show files, observed pages, checks, and findings in a graph; do not imply inferred relationships are proven data flow.
 - Use a few clear animations to show scanning, findings, the blue-team capture, and retest outcomes.
 - Present evidence, relevant OWASP mapping, suggested fixes, and individual retests.
+- Display all ten OWASP LLM risks in a coverage map; clearly distinguish implemented checks from risks not tested by this demo.
 - Add optional ElevenLabs narration after the hosted attack loop works; defer speech recognition and voice commands.
 - Let judges experience the demo without API credentials, repository uploads, or broad permissions.
 

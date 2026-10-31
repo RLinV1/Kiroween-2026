@@ -2,9 +2,11 @@
 
 ## Product goal
 
-Kage Crew is a web security demo centered on an agentic prompt-injection attack. An attack agent adapts a bounded sequence of prompts while Playwright drives a bundled AI website and captures evidence. Code checks, a graph of inspected files/pages, and a retest loop support the attack story.
+Kage Crew is a web security demo with two complementary scan lanes: a conventional source-code scanner and a bounded agentic prompt-injection attack. The attack agent adapts prompts while Playwright drives a bundled AI website and captures evidence. A graph shows both crews, their findings, and the retest loop.
 
 Follow the OWASP Top 10 for LLM Applications 2026 for the centerpiece: **LLM01:2026 Prompt Injection**, with **LLM02:2026 Sensitive Information Disclosure** when the synthetic canary leaks. Conventional code/browser checks may map to OWASP Top 10 for Web Applications where relevant. Record the test evidence and do not claim full coverage or guarantee security; see [the mapping](OWASP_MAPPING.md).
+
+Show all ten OWASP LLM risks in a simple coverage map. Identify the tested categories and mark the rest **Not tested in this demo**; the coverage map is an honest guide to scope, not a claim of implementation.
 
 ## One-month overview
 
@@ -23,7 +25,7 @@ The first two weeks are for getting the complete core loop working and publicly 
 
 ## Demo design
 
-The submission URL opens a working hosted demo. The judge clicks **Start demo attack** and sees a prompt-injection agent choose attempts, Playwright submit them to the bundled vulnerable AI chat page, and a bounded follow-up adapt to the observed response. The model proposes attacks; a deterministic canary check verifies whether the synthetic secret leaked. A small code-check ghost scans the bundled source in the same run. Findings show the page/file, prompt or check, observed evidence, a relevant OWASP category, and a suggested fix. A prepared mitigation can be applied and the same attack rerun.
+The submission URL opens a working hosted demo. The judge clicks **Start scan** and sees a code ghost scan the bundled source for common issues while the attack agent sends prompt injections to the bundled vulnerable AI chat page through Playwright. The agent can adapt a bounded follow-up to the observed response. The model proposes attacks; a deterministic canary check verifies whether the synthetic secret leaked. Findings show the file or page, prompt or check, evidence, relevant framework mapping, and a suggested fix. A prepared mitigation can be applied and the same attack rerun.
 
 ### Deployment shape
 
@@ -42,7 +44,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 - Build a minimal Docker image and deploy a health-check app to Cloud Run immediately.
 - Bundle a small intentionally vulnerable website and its source code.
 - Run Playwright against the deployed sample from the hosted scan service; pin matching Playwright/browser versions and verify Chromium starts in that environment.
-- Return one real Playwright prompt attempt and response, one deterministic canary evaluation, and one real code finding with evidence.
+- Return one real Playwright prompt attempt and response, one deterministic canary evaluation, and at least one independent code-scan finding with file/line evidence.
 
 **Gate:** if hosted Playwright is not working by the end of day 2, try running the scanner and sample app in the same Docker service and verify again. If it still fails, choose another Docker host before adding features. Do not build graph polish before this path works.
 
@@ -50,7 +52,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 - Add the LLM-backed attack loop: generate a prompt-injection attempt, observe the response through Playwright, and choose a bounded follow-up based on that response.
 - Limit the attack to a few attempts against the bundled AI route, with request/time budgets and a synthetic canary. The deterministic evaluator alone marks a confirmed leak.
-- Add one or two deterministic code checks and a safe browser observation to support the broader sweep.
+- Add a small deterministic code-scan roster for common source issues and a safe browser observation. Code checks run independently of model availability.
 - Show findings with file/page, prompt/action, observed evidence, applicable OWASP LLM or web application mapping, and suggested fix.
 
 ### Days 6–8 — graph crew
@@ -75,7 +77,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 ## Must-have / cutline
 
-Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, at least one real code check, graph with visible agents, evidence-backed findings, and a working retest example.
+Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, a conventional code scan with evidence-backed findings, graph with visible agents, and a working agentic attack/retest example.
 
 Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, multiple agents, and provider sign-in. Keep the one bounded LLM attack agent because it is the centerpiece. Keep animations brief and respect reduced-motion settings.
 
@@ -89,4 +91,4 @@ Cut first if time runs short: voice commands, ElevenLabs narration, extra vulner
 
 ## Acceptance demo
 
-From the submission URL, a judge starts the bundled attack without setup or credentials. They see the agent adapt a prompt based on a Playwright-observed response, inspect the prompt/response and deterministic canary verdict, follow the agents in the graph, apply the prepared mitigation, and rerun the attack to see whether the leak persists. The core path works without voice and takes about three minutes.
+From the submission URL, a judge starts the bundled scan without setup or credentials. They see independent source-code findings and the agent adapt a prompt based on a Playwright-observed response, inspect the evidence and deterministic canary verdict, follow both crews in the graph, apply the prepared mitigation, and rerun the attack to see whether the leak persists. The core path works without voice and takes about three minutes.
