@@ -1,0 +1,42 @@
+# Kage Crew MVP brainstorming
+
+## Intent
+
+Build a judge-ready web demo of Kage Crew: a crew of AI-assisted security agents that scan code and use Playwright to test a running site. The graph makes the agents' paths and findings visible; ElevenLabs gives the crew a voice. The product should show how static code checks and live browser behavior complement each other.
+
+## Approaches considered
+
+1. **Prompt-injection lab only.** Fast to build, but too narrow for a regular website security sweep and does not demonstrate code scanning alongside browser testing.
+2. **Autonomous scanner for arbitrary websites.** Closest to the long-term vision, but safe crawling, reliable findings, false-positive control, and broad coverage are too much to deliver credibly in a month.
+3. **Bounded code and Playwright sweep with a hosted sample, graph, and voice. Recommended.** Preserves the product's distinctive experience while limiting checks and targets enough to finish a stable demo that judges can access by URL.
+
+## Goals
+
+- Publish a working demo URL with a bundled sample project and intentionally vulnerable site.
+- Run a small set of evidence-based code and browser checks informed by the OWASP Top 10 for web applications.
+- Use Playwright for bounded, same-origin navigation and safe interactions.
+- Show files, observed pages, checks, and findings in a graph; do not imply inferred relationships are proven data flow.
+- Present evidence, relevant OWASP mapping, suggested fixes, and individual retests.
+- Use ElevenLabs for narration and a small voice-command set, with typed controls available throughout.
+- Let judges experience the demo without API credentials, repository uploads, or broad permissions.
+
+## Non-goals
+
+- Full OWASP Top 10 coverage, comprehensive penetration testing, or guaranteed discovery.
+- Unbounded crawling, destructive actions, arbitrary public target scanning, or automatic code changes.
+- Multi-tenant SaaS, many provider integrations, RAG features, persistent agent memory, and live threat feeds.
+
+## Proposed run
+
+The judge opens the deployed app and starts the bundled sample scan. Code ghosts run deterministic checks against the sample project; browser ghosts use Playwright on its paired demo website. Both streams populate a graph of observed files and pages. Findings include source/page, check, action, observed proof, applicable OWASP category, and remediation guidance. The judge applies a safe sample fix and reruns that check. ElevenLabs narrates progress when configured; the UI remains fully operable when voice is unavailable.
+
+## Success and constraints
+
+The complete demo should take about five minutes, work from the submitted URL, and clearly show code and browser scanning together. Development and testing remain possible locally, while deployment is included in the month-one schedule because the submission requires a working URL. The hosted environment scans only the bundled target; scanning arbitrary websites requires explicit authorization and strict bounds.
+
+## Builder decisions
+
+- Choose a minimal, reliable roster of code and browser checks and document each check's coverage.
+- Use deterministic evidence checks for whether a finding exists; use AI to explain or prioritize rather than fabricate proof.
+- Select hosting that supports the app and Playwright browser service within the available time and budget.
+- Confirm current eligibility and constraints before depending on Sign in with ChatGPT or ElevenLabs; neither should prevent judges from seeing core scan results.

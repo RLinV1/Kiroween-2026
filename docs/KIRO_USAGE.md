@@ -1,6 +1,6 @@
 ﻿# Kiro Usage
 
-Specter is built with Kiro and demonstrates deep, honest usage across the feature set. This is both a scoring lever and the required writeup.
+Kage Crew is built with Kiro and demonstrates deep, honest usage across the feature set. This is both a scoring lever and the required writeup.
 
 ## Spec-driven development (UI)
 Structured requirements, design, and tasks for the frontend. Kiro implements the repo-graph UI, findings console, and voice/text bar from specs. See `.kiro/specs/specter/`.

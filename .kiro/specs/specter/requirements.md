@@ -1,12 +1,12 @@
-﻿# Specter -- Requirements
+﻿# Kage Crew -- Requirements
 
 ## Overview
 
-Specter is an AI red-teaming and blue-teaming workbench for the agentic-AI era. It is a multi-tenant platform where developers of AI agents and AI-powered apps bring their own LLM (OpenAI, Anthropic, Gemini, or any compatible provider) and their own RAG knowledge base, then unleash an autonomous "ghost crew" of attacker agents to assault their own system, see what breaks, and defend it.
+Kage Crew is an AI red-teaming and blue-teaming workbench for the agentic-AI era. It is a multi-tenant platform where developers of AI agents and AI-powered apps bring their own LLM (OpenAI, Anthropic, Gemini, or any compatible provider) and their own RAG knowledge base, then unleash an autonomous "ghost crew" of attacker agents to assault their own system, see what breaks, and defend it.
 
-Built for the Frankenstein category. The chimera is structural and multi-paradigm: Specter stitches incompatible security-testing paradigms -- static analysis, dynamic adversarial fuzzing, RAG-targeted extraction, and live voice-driven interrogation -- into one autonomous crew that keeps attacking an AI system until it breaks, followed by a blue-team loop that defends. The theme lives in the architecture, not the visuals: ghosts are the attackers; the ghost crew persists and iterates attacks; red team = summon/assault; blue team = exorcise/mitigate; the attack to defend loop is the architecture.
+Built for the Frankenstein category. The chimera is structural and multi-paradigm: Kage Crew stitches incompatible security-testing paradigms -- static analysis, dynamic adversarial fuzzing, RAG-targeted extraction, and live voice-driven interrogation -- into one autonomous crew that keeps attacking an AI system until it breaks, followed by a blue-team loop that defends. The theme lives in the architecture, not the visuals: ghosts are the attackers; the ghost crew persists and iterates attacks; red team = summon/assault; blue team = exorcise/mitigate; the attack to defend loop is the architecture.
 
-Focus for the AI age: Specter primarily tests AI vulnerabilities (prompt injection, jailbreaks, RAG data exfiltration/poisoning, agent/tool hijacking, insecure output handling) and also supports attacking classic application vulnerabilities (XSS, SQL injection, hardcoded secrets, weak crypto) as a secondary surface.
+Focus for the AI age: Kage Crew primarily tests AI vulnerabilities (prompt injection, jailbreaks, RAG data exfiltration/poisoning, agent/tool hijacking, insecure output handling) and also supports attacking classic application vulnerabilities (XSS, SQL injection, hardcoded secrets, weak crypto) as a secondary surface.
 
 Genuinely useful and timely -- agentic security is a top 2026 concern and every team shipping an LLM app needs red-teaming before deployment. Less saturated than generic security scanning, and a strong resume signal (AI/agentic security). Targets Best Student Project: Frankenstein.
 
