@@ -17,6 +17,7 @@ Build a judge-ready Kage Crew web demo in one month. A bounded multi-agent coord
 ## Goals
 
 - Publish a working demo URL where judges can submit a public GitHub repository and run the hosted lab.
+- Keep the vulnerable lab browser-accessible as a live website; in the demo video, show the lab beside the Kage Crew dashboard while Playwright tests it and findings appear.
 - Use a bounded coordinator to dispatch Code Scout, Web Attack, and RAG Attack ghost crews, then dispatch Ghostbusters to verify and retest.
 - Check repositories read-only for secrets, dependencies, and common source issues; never execute them.
 - Run non-destructive SQLi and XSS checks against the lab and bounded prompt-injection/RAG checks against its actual retrieval chat.
@@ -38,7 +39,7 @@ Build a judge-ready Kage Crew web demo in one month. A bounded multi-agent coord
 
 ## Proposed run
 
-The judge submits a public GitHub URL and starts a scan. The coordinator dispatches the Code Scout crew and the two lab attack crews. Web Attack checks SQLi and XSS; RAG Attack tests the retrieval chat, using one document ingested during the demo. Ghostbusters verify each result and retest after a fix. The graph shows each crew, source files, lab routes, retrieved chunks, and proof. Findings include target, check, evidence, relevant OWASP mapping, and remediation. Ghostbusters capture only verified fixes. ElevenLabs narration is optional.
+The judge submits a public GitHub URL and starts a scan. The coordinator dispatches the Code Scout crew and the two lab attack crews. Web Attack checks SQLi and XSS; RAG Attack tests the retrieval chat, using one document ingested during the demo. The lab is a real browser-accessible website, shown beside the dashboard in the demo video as Playwright operates it. Ghostbusters verify each result and retest after a fix. The graph shows each crew, source files, lab routes, retrieved chunks, and proof. Findings include target, check, evidence, relevant OWASP mapping, and remediation. Ghostbusters capture only verified fixes. ElevenLabs narration is optional.
 
 Ghosts emerge at scan start and travel to the nodes being checked. A finding pulses red and opens its evidence. The blue-team capture beam contains that ghost and turns the node blue. On retest, a shield holds if the issue no longer reproduces; otherwise, the ghost breaks through. Keep motion brief and respect reduced-motion preferences.
 
