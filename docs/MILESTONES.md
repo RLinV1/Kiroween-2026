@@ -1,50 +1,65 @@
-# Kage Crew MVP (one month)
+# Kage Crew MVP (two weeks)
 
 ## Product goal
 
-Kage Crew is a web security workbench built around a crew of AI-assisted security agents. It scans a supplied code project and uses Playwright to exercise its running website. A graph shows the project and pages the crew has observed, the checks moving through them, and where findings were detected. ElevenLabs provides voice commands and narration.
+Kage Crew is a web security demo where a crew of agents scans code and uses Playwright to test a running website. A graph shows the files and pages they inspect, their progress, and where findings appear. The judge can open evidence and rerun a check after a fix.
 
-The MVP is a bounded security sweep informed by the OWASP Top 10 for web applications. It will implement a small, explicit set of checks and map each one to the relevant OWASP category. It will not claim complete coverage of all ten categories or guarantee that a target is secure.
+The MVP is a bounded sweep informed by the OWASP Top 10 for web applications. It implements a small, explicit set of checks and maps only those checks to relevant categories; it does not claim complete OWASP coverage or guarantee security.
 
-## MVP scope
+## Demo design
 
-- **Working demo URL:** deploy the frontend and scan service, with a bundled sample project and intentionally vulnerable demo website that judges can scan without uploading their own code. Keep development and local testing supported.
-- **Code scan:** accept a project archive or connect to the bundled sample. Run a small deterministic roster for clear issues such as exposed secrets and selected unsafe patterns. Show file and line evidence when available.
-- **Playwright scan:** exercise the bundled demo site, navigate a bounded set of same-origin pages, inspect forms, and run safe checks. Show the URL, action, and observed evidence for every result. No destructive actions or unrestricted crawling.
-- **OWASP mapping:** use the OWASP Top 10 for web applications as the organizing framework. Include only categories the implemented checks actually examine; label the rest as not covered in this MVP.
-- **Agent crew:** provide distinct code and browser agents with bounded tasks, request budgets, and timeouts. AI can help prioritize or explain results, but the initial finding roster must be based on observable evidence.
-- **Graph:** show project files/modules and pages/forms as nodes. Add edges only for relationships observed by the scanner. Animate each ghost along the nodes it checks and highlight evidence on the affected node.
-- **Findings and retest:** show severity, OWASP category, evidence, explanation, and remediation guidance. Let the user rerun a check and compare its result after a fix; report observations without promising complete remediation.
-- **Voice:** ElevenLabs handles a small command set and reads progress/findings aloud. Typed controls remain available. The deployed demo should degrade clearly if voice credentials or service access are unavailable.
-- **LLM connection:** keep model access to one supported path for the demo. Evaluate Sign in with ChatGPT plan usage for local/open-source use; do not make it a prerequisite for a judge to try the bundled deterministic checks.
-- **Safe hosted target:** the public demo scans only its bundled, intentionally vulnerable target. Arbitrary URL scanning is limited to local development or explicitly authorized targets, with clear scope and request limits.
+The submission URL opens a working hosted demo. The judge clicks **Start demo scan** and sees two agents check a bundled, intentionally vulnerable sample: one scans its source code and one uses Playwright on its running website. Findings show the file or page, what the agent did, observed evidence, a relevant OWASP category, and a suggested fix. A prepared fix can be applied and retested so the judge sees the result change.
 
-## Four-week sequence
+The hosted demo scans only this bundled target. It requires no judge API key, account, code upload, or access to the judge's computer. Keep local development supported. Do not allow public visitors to scan arbitrary websites.
 
-### Week 1 — scan spine
+## Two-week plan
 
-Define the supported project input and first check roster. Build the bundled vulnerable website, run one code check and one Playwright check, and return evidence in a basic results view.
+### Days 1–2 — prove the hosted browser path
 
-### Week 2 — bounded sweep and graph
+- Select the deployment target and deploy a minimal health-check app immediately.
+- Bundle a small intentionally vulnerable website and its source code.
+- Run Playwright against the deployed sample from the hosted scan service; verify the browser installs and runs in that environment.
+- Return one real browser observation and one real code finding with evidence.
 
-Add the selected checks, safe same-origin navigation, OWASP mapping, and graph nodes for files and observed pages. Show scan progress and attach findings to graph nodes.
+**Gate:** if hosted Playwright is not working by the end of day 2, switch to a host that supports a bundled browser or run the scanner in the same container as the demo app. Do not build graph polish before this path works.
 
-### Week 3 — agent crew and voice
+### Days 3–5 — scan and findings
 
-Give checks distinct ghost identities and animate them through the graph. Add ElevenLabs narration and a small set of voice commands, with typed controls and audio-off support.
+- Add a very small deterministic roster: for example, exposed test secret and unsafe output handling in code, plus one or two safe browser checks against the sample.
+- Bound page navigation, scan duration, and requests; keep all browser activity on the bundled same-origin target.
+- Show findings with file/page, action, observed evidence, category mapping, and suggested fix.
 
-### Week 4 — retest and deploy
+### Days 6–8 — graph crew
 
-Add per-finding reruns, before/after status, common error handling, deployment of the judge-ready demo, setup documentation, and a short demo path.
+- Render the sample's source files and observed website pages as graph nodes.
+- Show code and Playwright agents moving across the nodes they actually inspect.
+- Highlight findings on their source or page node and show progress/error states.
 
-## Deferred
+### Days 9–10 — retest and experience
 
-- Complete OWASP Top 10 coverage or a claim of general-purpose security auditing.
-- Unrestricted autonomous attack generation, arbitrary target crawling, destructive testing, or scanning without authorization.
-- Broad support for uploads of arbitrary repositories, private repository integrations, production multi-tenant accounts, and durable user history.
-- Multiple LLM vendors, RAG uploads/poisoning, live threat feeds, persistent agent memory, and exhaustive vulnerability catalogs.
-- Automatic code changes or claims that passing retests prove a site is secure.
+- Add a prepared sample fix and a per-finding retest that demonstrates a changed result.
+- Add basic visual polish, clear empty/error states, and a simple landing/start-scan path.
+- Add ElevenLabs narration if credentials and integration are ready; keep text status and controls complete without audio. Voice commands are stretch.
+
+### Days 11–14 — stabilize and submit
+
+- Test the complete flow from the public URL in a clean browser and on another device/network.
+- Fix deployment, browser, timeout, and first-run issues; keep a short recorded walkthrough as backup.
+- Finish setup instructions, demo script, and category coverage notes.
+
+## Must-have / cutline
+
+Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, at least one real code check, graph with visible agents, evidence-backed findings, and a working retest example.
+
+Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, AI-generated attacks, and provider sign-in. ElevenLabs narration is the first stretch item after the core scan loop works.
+
+## Scope limits
+
+- No complete OWASP Top 10 coverage claim; show which categories the implemented checks cover and mark others as not covered.
+- No arbitrary public target scanning, unrestricted crawling, destructive tests, or unauthorized use.
+- No multi-tenant accounts, arbitrary repository uploads, multiple LLM providers, RAG features, live threat feeds, or automatic code edits.
+- AI can explain findings, but initial findings must be based on observable evidence.
 
 ## Acceptance demo
 
-From the submitted demo URL, a judge starts a scan of the bundled sample. They see code and Playwright ghosts traverse the graph, open findings with file/page evidence and relevant OWASP categories, hear ElevenLabs narrate progress, then rerun a check after applying a sample fix and compare the result. The core demo remains usable without voice and takes about five minutes.
+From the submission URL, a judge starts the bundled scan without setup or credentials. They see source and browser agents scan the sample, follow their activity in the graph, inspect evidence and OWASP mapping, apply the prepared fix, and rerun the check to see its result change. The core path works with voice disabled and takes about three minutes.

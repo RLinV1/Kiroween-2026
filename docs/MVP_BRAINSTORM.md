@@ -2,7 +2,7 @@
 
 ## Intent
 
-Build a judge-ready web demo of Kage Crew: a crew of AI-assisted security agents that scan code and use Playwright to test a running site. The graph makes the agents' paths and findings visible; ElevenLabs gives the crew a voice. The product should show how static code checks and live browser behavior complement each other.
+Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agents that scan code and use Playwright to test a running site. The graph makes the agents' paths and findings visible; ElevenLabs can give the crew a voice after the working scan loop is proven. The product should show how static code checks and live browser behavior complement each other.
 
 ## Name
 
@@ -36,7 +36,7 @@ The judge opens the deployed app and starts the bundled sample scan. Code ghosts
 
 ## Success and constraints
 
-The complete demo should take about five minutes, work from the submitted URL, and clearly show code and browser scanning together. Development and testing remain possible locally, while deployment is included in the month-one schedule because the submission requires a working URL. The hosted environment scans only the bundled target; scanning arbitrary websites requires explicit authorization and strict bounds.
+The complete demo should take about three minutes and work from the submitted URL without judge credentials or setup. Deployment and a real hosted Playwright run are proved in the first two days, before graph polish. Development and testing remain possible locally. The hosted environment scans only the bundled target; arbitrary website scanning is outside this MVP.
 
 ## Builder decisions
 
