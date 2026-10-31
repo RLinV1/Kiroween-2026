@@ -1,8 +1,8 @@
 # Kage Crew
 
-Kage Crew is a graph-based security workbench with two complementary scan lanes: a conventional code scanner checks the project's source, while an agentic attack crew uses Playwright to test a bundled AI website. The attack agent adapts a bounded sequence of prompt-injection attempts and captures evidence. The graph shows both crews at work; ElevenLabs narration can bring findings to life.
+Kage Crew is a graph-based security workbench coordinated by a bounded multi-agent workflow. It scans a public GitHub repository for source issues and sends a browser attack crew against a separate hosted security lab. Specialist workers check code, test SQL injection and XSS with Playwright, and probe the lab's RAG chat for prompt injection and data leakage. A deterministic verifier checks evidence before findings appear in the ghost graph.
 
-Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings static code analysis, live browser testing, an animated graph, and optional voice narration together in one security tool.
+Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings repository analysis, browser security testing, adaptive AI red teaming, deterministic verification, and a graph-based ghost crew together in one security tool.
 
 ## Why the name
 
@@ -10,17 +10,17 @@ Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings 
 
 ## The MVP
 
-The two-week MVP follows the [OWASP Top 10 for LLM Applications 2026](https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/). Its UI shows all ten risks in a coverage map, clearly marking which are tested. The bundled attack targets **LLM01:2026 Prompt Injection**; a verified canary leak also maps to **LLM02:2026 Sensitive Information Disclosure**. See [our mapping and test evidence](docs/OWASP_MAPPING.md). Showing the full list does not imply full test coverage.
+The one-month MVP uses a public GitHub link for read-only source analysis and a separate, hosted lab for active attacks. Its UI shows all ten OWASP LLM risks in a coverage map and marks checks that are not implemented. The lab includes bounded SQL injection and XSS checks plus an actual RAG chat that can ingest one Markdown or text document for prompt-injection and leakage testing. Verified canary exposure maps to **LLM02:2026 Sensitive Information Disclosure**. See [our mapping and evidence rules](docs/OWASP_MAPPING.md); displaying the full list does not imply full coverage.
 
-- **Regular code scan:** an independent, deterministic scanner checks the bundled project source for common security issues, with file and line evidence where available. It runs whether or not the LLM attack is enabled.
-- **Agentic attack:** a single LLM-backed agent chooses and adapts prompt-injection attempts based on observed responses, with a strict attempt limit. A deterministic canary check decides whether the synthetic secret leaked.
-- **Playwright scan:** drives the bundled AI website, submits attack prompts, and records the page, action, and observed response. A small number of safe browser checks supplement the attack.
-- **Ghost crew graph:** files, modules, and observed pages appear as nodes; animated agents show scan progress and findings.
+- **Repo scan:** deterministic secret, dependency, and common source checks scan a public GitHub snapshot without executing it. Findings include file/line evidence when available, and secret values are redacted.
+- **Multi-agent orchestrator:** a bounded coordinator dispatches the Repo Scout, Code Security worker, Playwright Web Attack crew, AI/RAG Red Team, and Evidence Verifier. The AI proposes/adapts attacks; deterministic checks decide whether findings are confirmed.
+- **Live attack lab:** Playwright checks SQLi and XSS against controlled routes and drives the lab's RAG chat. A judge can ingest one document during the demo; retrieval evidence and a synthetic canary make leakage results verifiable.
+- **Ghost crew graph:** coordinator, workers, repository files, lab pages, retrieved chunks, findings, and evidence appear as nodes. Ghostbusters capture a finding ghost only after a successful verified retest.
 - **Evidence and retesting:** findings include relevant OWASP mapping and remediation guidance, with a way to rerun a check after a fix.
 - **Voice:** ElevenLabs narration is a stretch feature after the attack loop works; typed controls remain available. Voice commands are deferred.
-- **Working demo URL:** the deployed app includes a bundled sample project and intentionally vulnerable AI website so judges can try the core loop without setup. Local development and testing are supported too.
+- **Working demo URL:** judges can submit a public GitHub URL and run attacks against the hosted lab without installing the project or supplying personal API credentials. Local Docker development uses the same lab.
 
-The hosted demo is restricted to the bundled target. Arbitrary site scans require authorization and clear scope. Voice and model-assisted extras may depend on external services; the core sample scan should remain usable without them.
+Active attacks are restricted to the hosted lab. Repository analysis is read-only and bounded; unsupported languages or checks are shown as such. Arbitrary live-site attacks and a local-development CLI are future work. ElevenLabs narration is optional and cannot block the core scan.
 
 ## Scope and schedule
 

@@ -9,14 +9,16 @@
 ## Scan service
 
 - Python 3.11 and FastAPI for the scan API and runner.
-- Playwright with pinned Chromium version to drive the bundled AI chat website.
-- Deterministic Python checks for a small set of source-code issues and browser observations.
-- A bounded agent loop calls one configured LLM provider to propose prompt-injection payloads and choose a limited follow-up from observed responses. A deterministic canary matcher evaluates success.
+- Playwright with pinned Chromium to test only the hosted lab in the MVP.
+- Bounded public GitHub snapshot intake; never execute the repository or install its dependencies.
+- Deterministic secret, dependency, source, SQLi, and XSS checks with explicit supported-language and coverage status.
+- A fixed coordinator workflow dispatches Repo Scout, Code Security, Web Attack, AI/RAG Red Team, and Evidence Verifier workers. One configured LLM provider powers bounded, response-informed prompt injection; deterministic check rules decide whether findings are confirmed.
+- The hosted lab contains vulnerable SQL/XSS routes and a RAG chat with actual retrieval and one-document Markdown/text ingestion. Synthetic canary checks verify disclosure.
 - SQLite or in-memory state is sufficient for the single-demo scan; no account system or long-term result store in the MVP.
 
 ## Hosted demo
 
-- Docker image includes the API, built frontend, bundled sample source/site, and matching Playwright Chromium dependencies.
+- Docker image includes the API/coordinator, built frontend, security lab, and matching Playwright Chromium dependencies.
 - Google Cloud Run is the selected hosting target. Use a single container service initially, one scan at a time, a health endpoint, and bounded scan timeouts.
 - Store the provider key as a Cloud Run secret; never put it in frontend code or logs. If unavailable, still run non-LLM checks and clearly report that agentic attacks are disabled.
 
@@ -28,4 +30,4 @@
 
 ## Scope rationale
 
-Use a single model provider and a fixed target so the agentic attack is easy to explain and the live scan is predictable. Follow OWASP LLM01:2026 Prompt Injection for the primary attack and LLM02:2026 Sensitive Information Disclosure when the canary is confirmed exposed. See [the mapping](OWASP_MAPPING.md). Conventional checks map to web application risks only where applicable; no mapping implies full coverage.
+Use a fixed worker graph and bounded targets so the attack path is easy to explain and predictable: public repositories are analyzed read-only, while active browser attacks use the hosted lab. Follow OWASP LLM01:2026 Prompt Injection and LLM02:2026 Sensitive Information Disclosure when a canary is confirmed exposed. See [the mapping](OWASP_MAPPING.md). Conventional checks map to web application risks only where applicable; no mapping implies full coverage.

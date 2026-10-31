@@ -1,94 +1,52 @@
-# Kage Crew MVP (two weeks)
+# Kage Crew MVP (one month)
 
 ## Product goal
 
-Kage Crew is a web security demo with two complementary scan lanes: a conventional source-code scanner and a bounded agentic prompt-injection attack. The attack agent adapts prompts while Playwright drives a bundled AI website and captures evidence. A graph shows both crews, their findings, and the retest loop.
+Deliver a judge-ready, deployed security workbench with a bounded multi-agent coordinator. A public GitHub URL feeds read-only source checks; a separate hosted lab receives active SQLi, XSS, and AI/RAG attacks. The graph follows real worker events and evidence. The demo does not execute submitted repositories or attack arbitrary websites.
 
-Follow the OWASP Top 10 for LLM Applications 2026 for the centerpiece: **LLM01:2026 Prompt Injection**, with **LLM02:2026 Sensitive Information Disclosure** when the synthetic canary leaks. Conventional code/browser checks may map to OWASP Top 10 for Web Applications where relevant. Record the test evidence and do not claim full coverage or guarantee security; see [the mapping](OWASP_MAPPING.md).
+Map findings to relevant OWASP categories and mark unsupported coverage clearly. Display all ten OWASP LLM risks, but label unimplemented risks **Not tested in this demo**. See [OWASP mapping](OWASP_MAPPING.md).
 
-Show all ten OWASP LLM risks in a simple coverage map. Identify the tested categories and mark the rest **Not tested in this demo**; the coverage map is an honest guide to scope, not a claim of implementation.
+## Four-week plan
 
-## One-month overview
-
-By the end of the month, deliver a judge-ready Kage Crew demo on Google Cloud Run. Its centerpiece is a real, bounded LLM attack agent using Playwright against the bundled AI chat target; the judge can watch the crew in the graph, inspect evidence, apply the prepared defense, and retest. Small source checks, OWASP mapping, and optional ElevenLabs narration round out the experience. The target remains fixed and synthetic so the demo is safe, affordable, and repeatable.
-
-The first two weeks are for getting the complete core loop working and publicly deployed. Weeks three and four are for making that same loop reliable, understandable, and polished—not for expanding into arbitrary targets or a broad scanner.
-
-| Period | Outcome |
+| Week | Outcome |
 |---|---|
-| **Week 1** | Prove Cloud Run can run the bundled site and Playwright; build the bounded adaptive attack, canary verdict, and one code check. |
-| **Week 2** | Complete the graph, evidence, prepared mitigation, and retest; reach a usable public demo URL. |
-| **Week 3** | Harden the hosted flow, improve error states and animation/accessibility, and add ElevenLabs narration if the core path is stable. |
-| **Week 4** | Test from a clean browser/device, control model spend, fix deployment issues, and prepare the submission/demo walkthrough. |
+| **1 — live foundation** | Deploy the lab and Playwright runner to Cloud Run. Accept bounded public GitHub snapshots without executing code. Prove one real code finding and one real hosted browser check. |
+| **2 — workers and coordinator** | Implement the fixed workflow graph: Repo Scout, deterministic Code Security, Playwright Web Attack, AI/RAG Red Team, Evidence Verifier. Return progress, partial results, and explicit unsupported/error states. |
+| **3 — RAG and visible proof** | Add one-document Markdown/text ingestion, actual retrieval, bounded adaptive prompt injection, canary verification, SQLi/XSS proof, graph evidence links, prepared lab fixes, and per-finding retests. |
+| **4 — judge-ready finish** | Stabilize Cloud Run, cap resource/model spend, polish graph and ghost/Ghostbuster feedback, verify reduced-motion/status states, and prepare the three-minute demo walkthrough. Add ElevenLabs narration only if the core path is solid. |
 
-**End-of-month success:** a judge can open the URL without setup, watch the agent attack through Playwright, see a verified finding on the graph, apply the sample defense, and retest successfully in about three minutes.
+**End-of-month success:** a judge pastes a public repository URL, sees source findings, watches the coordinated attack workers test the separate live lab, inspects evidence, applies a prepared fix, and sees the verified retest reflected in the graph—all without local setup or personal credentials.
 
-## Demo design
+## Demo flow
 
-The submission URL opens a working hosted demo. The judge clicks **Start scan** and sees a code ghost scan the bundled source for common issues while the attack agent sends prompt injections to the bundled vulnerable AI chat page through Playwright. The agent can adapt a bounded follow-up to the observed response. The model proposes attacks; a deterministic canary check verifies whether the synthetic secret leaked. Findings show the file or page, prompt or check, evidence, relevant framework mapping, and a suggested fix. A prepared mitigation can be applied and the same attack rerun.
+1. Enter a public GitHub URL and start the scan.
+2. The coordinator dispatches Repo Scout and Code Security for a bounded read-only snapshot. In parallel, Web Attack checks the lab's SQLi and XSS routes, while AI/RAG Red Team attacks its retrieval chat.
+3. The judge can ingest one small `.txt` or `.md` document into the RAG lab to demonstrate live poisoning/retrieval behavior.
+4. Workers return evidence. The deterministic verifier marks each result confirmed, not reproduced, unsupported, or errored; the LLM never decides whether its own attack succeeded.
+5. Ghosts move along observed graph edges. Confirmed issues haunt their nodes; findings show target, check, evidence, OWASP mapping, and suggested fix.
+6. The judge applies a prepared lab fix and retests. Ghostbusters capture a finding ghost only when the corresponding check confirms resolution.
 
-### Deployment shape
+The GitHub repository and hosted lab are separate targets, and the interface must say so. A GitHub link does not imply the submitted application was run or dynamically attacked.
 
-- Package the web app, API, bundled sample site/source, and Playwright Chromium in a version-pinned Docker image. Serve the UI and API from one web service to keep the demo path simple.
-- Use Google Cloud Run as the initial deployment target. It accepts a container image and provides a service URL for the judge demo. Confirm the browser launches and the sample scan completes there before building the graph experience; Azure App Service Linux containers are the fallback if Cloud Run fails this proof.
-- Add a health endpoint and a visible scan status/error. Keep scans single-worker and bounded for predictable resource use.
-- Treat only the bundled sample as a permitted target in the public demo. Do not expose an arbitrary URL input to public visitors.
-- Keep a local Docker path so the same image and scan flow can be reproduced during development.
+## Deployment and safety
 
-The hosted demo scans only this bundled target. It requires no judge API key, account, code upload, or access to the judge's computer. Keep local development supported. Do not allow public visitors to scan arbitrary websites.
-
-## Two-week plan
-
-### Days 1–2 — prove the hosted browser path
-
-- Build a minimal Docker image and deploy a health-check app to Cloud Run immediately.
-- Bundle a small intentionally vulnerable website and its source code.
-- Run Playwright against the deployed sample from the hosted scan service; pin matching Playwright/browser versions and verify Chromium starts in that environment.
-- Return one real Playwright prompt attempt and response, one deterministic canary evaluation, and at least one independent code-scan finding with file/line evidence.
-
-**Gate:** if hosted Playwright is not working by the end of day 2, try running the scanner and sample app in the same Docker service and verify again. If it still fails, choose another Docker host before adding features. Do not build graph polish before this path works.
-
-### Days 3–5 — agentic attack and findings
-
-- Add the LLM-backed attack loop: generate a prompt-injection attempt, observe the response through Playwright, and choose a bounded follow-up based on that response.
-- Limit the attack to a few attempts against the bundled AI route, with request/time budgets and a synthetic canary. The deterministic evaluator alone marks a confirmed leak.
-- Add a small deterministic code-scan roster for common source issues and a safe browser observation. Code checks run independently of model availability.
-- Show findings with file/page, prompt/action, observed evidence, applicable OWASP LLM or web application mapping, and suggested fix.
-
-### Days 6–8 — graph crew
-
-- Render the sample's source files and observed website pages as graph nodes.
-- Show code and Playwright agents moving across the nodes they actually inspect.
-- Highlight findings on their source or page node and show progress/error states.
-- Animate ghosts spawning at scan start and traveling to checked nodes. Pulse a node red when a finding appears and reveal its evidence marker.
-
-### Days 9–10 — retest and experience
-
-- Add a prepared prompt-defense change and per-attack retest that demonstrates the agent no longer extracts the canary (or still succeeds if the issue remains).
-- Show the blue-team capture beam containing a finding ghost and turning its node blue; on retest, animate a shield holding when fixed or the ghost breaking through when the issue remains.
-- Add basic visual polish, clear empty/error states, and a simple landing/start-scan path.
-- Add ElevenLabs narration if credentials and integration are ready; keep text status and controls complete without audio. Voice commands are stretch.
-
-### Days 11–14 — stabilize and submit
-
-- Test the complete flow from the public URL in a clean browser and on another device/network.
-- Fix deployment, browser, timeout, and first-run issues; keep a short recorded walkthrough as backup.
-- Finish setup instructions, demo script, and category coverage notes.
+- Deploy one version-pinned Docker service to Google Cloud Run with UI/API, lab, and matching Playwright Chromium dependencies.
+- Keep health/status endpoints, one bounded scan at a time, request/archive/file/runtime limits, and visible failure states.
+- Accept public GitHub repositories only. Never execute code, install packages, follow repo-provided links, or show full secret values.
+- Allow active browser attacks only against the hosted lab. Use synthetic data and non-destructive SQLi/XSS proof cases.
+- Store the provider credential server-side as a Cloud Run secret; cap calls and clearly mark the AI/RAG worker unavailable if the key is missing.
+- Keep a local Docker flow for development. A CLI for users' local apps and arbitrary live-site attacks are future work.
 
 ## Must-have / cutline
 
-Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, a conventional code scan with evidence-backed findings, graph with visible agents, and a working agentic attack/retest example.
+Must ship: public demo URL, public-repo code scan with evidence, hosted lab with at least one verified SQLi or XSS finding, real RAG retrieval plus one bounded prompt-injection/leakage run, multi-agent coordinator status, graph/evidence view, and a working fix/retest.
 
-Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, multiple agents, and provider sign-in. Keep the one bounded LLM attack agent because it is the centerpiece. Keep animations brief and respect reduced-motion settings.
+Cut first if time runs short: voice, broad source-language coverage, extra attack variations, elaborate graph edges, private repos, arbitrary targets, and local CLI. Keep worker roles visible, the evidence verifier, and one end-to-end fix/retest path.
 
 ## Scope limits
 
-- No complete OWASP Top 10 coverage claim; distinguish LLM application mappings for prompt injection from web application mappings for conventional checks, and mark uncovered categories.
-- No arbitrary public target scanning, unrestricted crawling, destructive tests, or unauthorized use.
-- No multi-tenant accounts, arbitrary repository uploads, multiple LLM providers, RAG features, live threat feeds, or automatic code edits.
-- The LLM proposes attacks and adapts to responses; it does not decide whether an attack succeeded. A deterministic canary match confirms the finding.
-- Store the LLM credential only server-side as a Cloud Run secret, enforce a strict usage budget, and disable the agentic attack clearly when no key is configured. The public judge flow must use the project-configured key, not ask judges to bring one.
-
-## Acceptance demo
-
-From the submission URL, a judge starts the bundled scan without setup or credentials. They see independent source-code findings and the agent adapt a prompt based on a Playwright-observed response, inspect the evidence and deterministic canary verdict, follow both crews in the graph, apply the prepared mitigation, and rerun the attack to see whether the leak persists. The core path works without voice and takes about three minutes.
+- No claim of full OWASP Top 10 coverage or a general-purpose penetration test.
+- No arbitrary live-site scans, unrestricted crawling, destructive tests, or unauthorized use.
+- No execution of submitted GitHub code, private-repository support, or automatic source edits.
+- No multi-tenant accounts, multiple providers, runtime MCP discovery, persistent history, or live threat feeds.
+- The coordinator dispatches only fixed worker types with bounded inputs and budgets; worker/model claims are not findings without verifier evidence.

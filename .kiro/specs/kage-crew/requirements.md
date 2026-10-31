@@ -2,38 +2,42 @@
 
 ## Goal
 
-Kage Crew is a judge-accessible, graph-based security demo. Its centerpiece is a bounded, LLM-backed prompt-injection agent that attacks a bundled AI chat website through Playwright, adapts to observed responses, and presents verifiable evidence. Small code and browser checks support a regular security-sweep story.
+Kage Crew is a judge-accessible security workbench with a graph-based multi-agent orchestrator. It scans a public GitHub repository using read-only code checks and runs bounded active tests against a separate hosted lab. Specialist workers test conventional web vulnerabilities and an AI/RAG chat; a deterministic verifier grounds every confirmed finding in evidence.
 
 ## In scope
 
-1. **Hosted demo:** public URL on Google Cloud Run; a judge can start the bundled scan without an account, code upload, or personal API key.
-2. **Bundled target:** intentionally vulnerable AI chat page and its source, including a synthetic canary secret and a prepared mitigation toggle.
-3. **Agentic attack:** one model-backed agent proposes a prompt-injection attempt, receives the target's observed response, and may choose a bounded follow-up. Enforce a small attempt cap, time limit, and model-usage budget.
-4. **Playwright:** drive the bundled same-origin target UI and capture the submitted prompt, page, response, and run status.
-5. **Verdict:** a deterministic matcher checks for the synthetic canary. The LLM must not decide whether it succeeded. A finding includes the evidence that triggered the verdict.
-6. **Code checks:** a small deterministic roster over the bundled target source, with file and line evidence when available.
-7. **Graph and ghosts:** show observed files/pages and checks as nodes; animate agents along observed relationships; connect findings to evidence nodes.
-8. **Blue-team demo:** apply the prepared prompt-defense change, capture the attacking ghost, and rerun the same bounded attack. Report whether the canary still appears.
-9. **OWASP mapping:** follow OWASP Top 10 for LLM Applications 2026. Map the prompt-injection attack to LLM01:2026; map an observed canary leak to LLM02:2026 Sensitive Information Disclosure as impact. Map conventional findings to Web Application Top 10 categories only where relevant. See `docs/OWASP_MAPPING.md` and mark unsupported categories not covered.
-10. **Coverage map:** show all ten OWASP LLM risks in the interface and label each as tested or not tested in this demo. Do not imply that display equals scan coverage.
-11. **Voice stretch:** ElevenLabs narration may announce progress/findings. Typed controls and visible text status are required even when voice is unavailable.
+1. **Hosted demo:** public Google Cloud Run URL; a judge can run a scan without an account, personal API key, or local setup.
+2. **Public repository input:** accept a public GitHub repository URL, fetch a bounded snapshot, identify supported languages, and never execute the repository or install its dependencies.
+3. **Code Security worker:** run deterministic secret, dependency, and common source checks. Show file/line evidence where available, redact secret values, and label unsupported checks/languages.
+4. **Hosted security lab:** include intentionally vulnerable SQLi and XSS routes plus a RAG chat backed by actual document retrieval. The judge can ingest one `.txt` or `.md` document during a run.
+5. **Coordinator:** dispatch the Repo Scout, Code Security worker, Playwright Web Attack crew, AI/RAG Red Team, and Evidence Verifier through a bounded workflow graph. Track progress, limits, errors, and findings. Workers cannot select arbitrary targets or spawn more workers.
+6. **Web Attack crew:** use Playwright for non-destructive SQLi and XSS checks against only the hosted lab; capture route, action, response, and proof.
+7. **AI/RAG Red Team:** use one LLM-backed specialist to attempt prompt injection against the hosted RAG chat and adapt a bounded follow-up to observed responses. Enforce attempt, time, and model-usage budgets.
+8. **Evidence Verifier:** use deterministic rules to confirm or reject findings, including synthetic canary exposure. The LLM must not grade its own success.
+9. **Graph and ghosts:** show workflow workers, repository files, lab routes, retrieved chunks, findings, and evidence as nodes/observed edges. Animate attacker ghosts on confirmed vulnerable nodes and connect each result to its evidence.
+10. **Blue-team retest:** allow a prepared lab fix and rerun the relevant check. Ghostbusters capture the finding ghost only when verification confirms the issue no longer reproduces; otherwise it remains.
+11. **OWASP coverage:** show all ten OWASP LLM risks as a coverage map, marking actual tested categories and labeling the rest **Not tested in this demo**. Map web findings only to relevant categories. Do not claim full coverage.
+12. **Voice stretch:** ElevenLabs narration may announce progress/findings. Typed controls and text status remain complete without voice.
 
 ## Public-demo safety
 
-- Public scans target only the bundled sample. Do not accept arbitrary public URLs or uploaded projects in the MVP.
-- Keep the canary synthetic; do not use real secrets or personal data.
-- Store the developer-configured model key as a server-side Cloud Run secret; never expose or log it. If absent, disable agentic generation clearly while keeping deterministic scans available.
-- Bound browser navigation, scan concurrency, attempts, model calls, request size, and runtime.
+- Active browser attacks target only the hosted lab; the GitHub repository is a separate static-analysis input.
+- Accept public repositories only, with archive size, file count, and scan time limits. Do not execute repository code, install dependencies, follow arbitrary links, or reveal full secret values.
+- Use isolated synthetic records, a synthetic canary, and non-destructive SQLi/XSS checks. Limit lab document ingestion to small text/Markdown files.
+- Bound browser navigation, scan concurrency, request sizes, attempts, model calls, and runtime.
+- Store the model key only as a server-side Cloud Run secret. If absent, show the AI/RAG worker as unavailable; do not replace it with scripted behavior and call it autonomous.
 
 ## Acceptance criteria
 
-- The deployed URL can start and complete a scan from a clean browser without judge setup.
-- At least one real Playwright prompt/response and a real bundled-source finding appear with evidence.
-- The attack agent makes a response-informed follow-up within its limit; canary detection, not model self-report, determines success.
-- A prepared mitigation and retest produce an observable changed outcome.
-- The graph shows scan progress, findings, capture, and retest state. Motion respects reduced-motion settings.
-- The core path takes about three minutes and does not require ElevenLabs.
+- The deployed app accepts a public GitHub URL and clearly reports completed, partial, unsupported, or failed checks.
+- Source findings include file/line evidence where available, and secret values are redacted.
+- In one run, the coordinator reports progress from independent code and lab workers and gathers their evidence in one graph/report.
+- Playwright reproduces at least one conventional lab issue and the AI/RAG worker performs a response-informed attack against the real retrieval chat.
+- Deterministic verification controls confirmed status; retrieved chunks, browser responses, and source locations support the result.
+- A prepared lab fix changes a verified result on retest. The ghost is captured only after the fix is verified.
+- The graph represents actual run events and supports readable text status and reduced-motion settings.
+- The judge-facing path needs no personal credentials or local installation and completes in about three minutes.
 
 ## Out of scope
 
-Arbitrary target scanning, general-purpose autonomous penetration testing, full OWASP Top 10 coverage, multi-tenant accounts, multiple model vendors, RAG, runtime MCP tool discovery, unrestricted crawling, destructive actions, automatic code changes, and persistent scan history.
+Arbitrary live-site attacks, private repositories, executing submitted code, a local development CLI, unrestricted crawling, comprehensive OWASP coverage, multi-tenant accounts, multiple model providers, automatic source edits, persistent history, runtime MCP discovery, and live threat intelligence.
