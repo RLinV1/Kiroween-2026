@@ -2,7 +2,7 @@
 
 ## Intent
 
-Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agents that scan code and use Playwright to test a running site. The graph makes the agents' paths and findings visible; ElevenLabs can give the crew a voice after the working scan loop is proven. The product should show how static code checks and live browser behavior complement each other.
+Build a judge-ready web demo of Kage Crew in two weeks, centered on an agentic prompt-injection attack. An LLM agent adapts a bounded sequence of attempts to a bundled AI website through Playwright. The graph makes its path and findings visible; code checks support the wider security story. ElevenLabs narration follows only after the attack loop works.
 
 ## Name
 
@@ -10,19 +10,22 @@ Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agent
 
 ## Approaches considered
 
-1. **Prompt-injection lab only.** Fast to build, but too narrow for a regular website security sweep and does not demonstrate code scanning alongside browser testing.
-2. **Autonomous scanner for arbitrary websites.** Closest to the long-term vision, but safe crawling, reliable findings, false-positive control, and broad coverage are too much to deliver credibly in a month.
-3. **Bounded code and Playwright sweep with a hosted sample, graph, and voice. Recommended.** Preserves the product's distinctive experience while limiting checks and targets enough to finish a stable demo that judges can access by URL.
+1. **Prompt-injection lab only.** Fastest to build, but lacks the requested code-scan and graph crew context.
+2. **Autonomous scanner for arbitrary websites.** Closest to the long-term vision, but safe crawling, reliable findings, false-positive control, and broad coverage are too much to deliver credibly in two weeks.
+3. **Agentic prompt-injection centerpiece plus supporting code checks, Playwright, hosted sample, and graph. Recommended.** Keeps the signature AI-agent behavior in front while bounding the target and supporting checks enough to finish a reliable demo URL in two weeks.
 
 ## Goals
 
 - Publish a working demo URL with a bundled sample project and intentionally vulnerable site.
-- Run a small set of evidence-based code and browser checks informed by the OWASP Top 10 for web applications.
-- Use Playwright for bounded, same-origin navigation and safe interactions.
+- Make one bounded LLM-backed prompt-injection agent the centerpiece; it adapts a follow-up based on Playwright-observed responses.
+- Use a deterministic canary match to verify success; do not let the LLM declare its own attack successful.
+- Map prompt injection to applicable OWASP Top 10 for LLM Applications guidance; map conventional checks to the OWASP Top 10 for Web Applications only where relevant.
+- Include a small set of evidence-based code and browser checks.
+- Restrict Playwright to the bundled AI target and safe same-origin actions.
 - Show files, observed pages, checks, and findings in a graph; do not imply inferred relationships are proven data flow.
 - Use a few clear animations to show scanning, findings, the blue-team capture, and retest outcomes.
 - Present evidence, relevant OWASP mapping, suggested fixes, and individual retests.
-- Use ElevenLabs for narration and a small voice-command set, with typed controls available throughout.
+- Add optional ElevenLabs narration after the hosted attack loop works; defer speech recognition and voice commands.
 - Let judges experience the demo without API credentials, repository uploads, or broad permissions.
 
 ## Non-goals
@@ -33,7 +36,7 @@ Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agent
 
 ## Proposed run
 
-The judge opens the deployed app and starts the bundled sample scan. Code ghosts run deterministic checks against the sample project; browser ghosts use Playwright on its paired demo website. Both streams populate a graph of observed files and pages. Findings include source/page, check, action, observed proof, applicable OWASP category, and remediation guidance. The judge applies a safe sample fix and reruns that check. ElevenLabs narrates progress when configured; the UI remains fully operable when voice is unavailable.
+The judge opens the deployed app and starts the bundled attack. A single LLM agent proposes a prompt injection, Playwright submits it to the paired AI chat page, and the agent selects a bounded follow-up based on the observed response. A deterministic canary check decides whether the target leaked its synthetic secret. A code ghost also runs a small deterministic roster over the sample source. Both streams populate a graph of observed files and pages. Findings include source/page, prompt or check, observed proof, applicable OWASP category, and remediation guidance. The judge applies the prepared prompt-defense fix and reruns the attack. ElevenLabs narration is optional; the UI works without it.
 
 Ghosts emerge at scan start and travel to the nodes being checked. A finding pulses red and opens its evidence. The blue-team capture beam contains that ghost and turns the node blue. On retest, a shield holds if the issue no longer reproduces; otherwise, the ghost breaks through. Keep motion brief and respect reduced-motion preferences.
 
@@ -43,7 +46,8 @@ The complete demo should take about three minutes and work from the submitted UR
 
 ## Builder decisions
 
-- Choose a minimal, reliable roster of code and browser checks and document each check's coverage.
+- Choose one stable model provider and a hard limit of a few attack attempts; use a small reliable roster of code/browser checks as supporting scope.
 - Use deterministic evidence checks for whether a finding exists; use AI to explain or prioritize rather than fabricate proof.
 - Select hosting that supports the app and Playwright browser service within the available time and budget.
-- Confirm current eligibility and constraints before depending on Sign in with ChatGPT or ElevenLabs; neither should prevent judges from seeing core scan results.
+- Configure the model credential server-side for the public demo, cap usage, and do not ask judges for keys. If it is unavailable, explain that the agentic attack is offline rather than presenting scripted prompts as an autonomous attack.
+- Keep ElevenLabs optional so it cannot prevent judges from seeing core scan results.

@@ -1,48 +1,31 @@
-﻿# Tech Stack
+# Tech Stack (MVP)
 
-## Frontend
-- React 18 + Vite + TypeScript -- app shell, repo-graph UI, findings console, voice/text bar.
-- Tailwind CSS -- haunted dark aesthetic.
-- Framer Motion -- ghost and node animations (ghosts crawling edges, breach pulses, exorcism glows).
-- React Flow -- the repo-graph visualization. Nodes are files / modules / endpoints; edges are data and control flow; ghost attackers animate along edges. The centerpiece of the demo.
-- Zustand -- local UI state.
-- TanStack Query -- server/async state and polling attack jobs.
-- Howler / Web Audio -- ElevenLabs TTS audio playback.
-- @elevenlabs/client-sdk -- ElevenLabs STT/TTS streaming; Web Speech API as a zero-cost STT fallback.
-- Text input -- a typed command box alongside voice, so you can speak or type to command the crew.
+## App and graph
 
-## Backend
-- Python 3.11 + FastAPI -- async API and orchestration.
-- SQLAlchemy ORM + Alembic -- schema and migrations.
-- SQLite (MVP/dev) -> Postgres (final/deploy) -- tenant_id row scoping for isolation.
-- cryptography (Fernet) -- encrypting user LLM keys at rest.
-- Pydantic v2 -- request/response schemas.
-- httpx -- async calls to LLM providers and MCP.
-- MCP server (Python, MCP SDK / fastmcp) -- exposes the ghost-crew attack tools.
-- LLM provider adapters -- openai, anthropic, google-generativeai; optional LiteLLM for normalization.
-- Playwright -- the live runtime agent. Drives the target app like a human attacker (navigate, click, type, read DOM and responses). This is the "runtime behavior" limb that makes the chimera real (source vs runtime).
-- Execution -- FastAPI BackgroundTasks (MVP) -> Celery/RQ + Redis (final) for attack jobs.
+- React, Vite, and TypeScript for the web app.
+- React Flow for the file/page graph.
+- Framer Motion for short ghost travel, finding pulse, capture beam, and retest shield animations. Respect reduced-motion preferences.
+
+## Scan service
+
+- Python 3.11 and FastAPI for the scan API and runner.
+- Playwright with pinned Chromium version to drive the bundled AI chat website.
+- Deterministic Python checks for a small set of source-code issues and browser observations.
+- A bounded agent loop calls one configured LLM provider to propose prompt-injection payloads and choose a limited follow-up from observed responses. A deterministic canary matcher evaluates success.
+- SQLite or in-memory state is sufficient for the single-demo scan; no account system or long-term result store in the MVP.
+
+## Hosted demo
+
+- Docker image includes the API, built frontend, bundled sample source/site, and matching Playwright Chromium dependencies.
+- Google Cloud Run is the selected hosting target. Use a single container service initially, one scan at a time, a health endpoint, and bounded scan timeouts.
+- Store the provider key as a Cloud Run secret; never put it in frontend code or logs. If unavailable, still run non-LLM checks and clearly report that agentic attacks are disabled.
 
 ## Voice
-- ElevenLabs TTS -- narrates orchestration, reads findings, voices the target leaked responses.
-- ElevenLabs STT (Scribe) -- voice commands that orchestrate the ghost crew.
-- Web Speech API -- free in-browser STT fallback.
-- Text input -- typed commands as a first-class alternative to voice.
 
-## Data & external services
-- BYO user LLM key (OpenAI / Anthropic / Gemini) -- powers the target, orchestrator, and attacker.
-- ElevenLabs API.
-- Threat-intel -- bundled local OWASP LLM Top 10 / MITRE ATLAS / CWE JSON (MVP); NVD API + OSV (stretch).
+- ElevenLabs text-to-speech narration is a stretch feature after the hosted attack loop works.
+- Voice recognition and commands are deferred. Typed controls and visible text status are required.
+- The demo remains complete when ElevenLabs is not configured.
 
-## Deployment
-- Frontend -- Vercel or Cloudflare Pages (static, free).
-- Backend -- Render or Koyeb (Python, free tier); Fly.io as an alternative. Railway is avoided given the October 2026 breach.
-- Playwright runtime -- bundled Chromium; the backend runs the browser agent headless (or via a browser service for deployment).
-- Secrets as environment variables (master encryption key, ElevenLabs key); never committed.
+## Scope rationale
 
-## Why these choices
-- React Flow + Framer Motion make the repo-graph-with-ghosts the visual hook judges remember.
-- Playwright makes the "live runtime" limb real -- the chimera is source analysis vs a browser that actually drives the app, not two text-based scanners.
-- MCP at runtime makes the agentic loop real (the LLM picks attack tools via MCP), not a scripted pipeline.
-- BYO LLM keeps the tool useful to any developer's stack; the provider-adapter layer keeps it vendor-agnostic.
-- Python + FastAPI fits security and agent orchestration.
+Use a single model provider and a fixed target so the agentic attack is easy to explain and the live scan is predictable. Map prompt injection to OWASP Top 10 for LLM Applications and conventional checks to the OWASP Top 10 for Web Applications where relevant. Neither mapping implies complete coverage. The defining demo is the bounded prompt-injection agent acting through Playwright, with code checks and the graph supporting the broader security story.

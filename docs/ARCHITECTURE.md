@@ -1,77 +1,47 @@
-﻿# Architecture
+# Kage Crew Architecture (MVP)
 
-## The chimera (why it is a Frankenstein)
+## Product shape
 
-Kage Crew combines security approaches that normally live in separate tools:
+Kage Crew's centerpiece is one bounded agentic prompt-injection attack against a bundled AI chat website. A planner proposes a small sequence of attack strategies, Playwright sends prompts through the visible UI, and an evaluator checks whether a planted canary secret appears in the response. The agent may adapt its next attempt based on the observed response, within a strict attempt and time budget.
 
-- Static source analysis (deterministic, no AI) -- what the code IS.
-- Live runtime driving via Playwright (a browser agent that clicks/types/reads) -- what the app DOES.
-- Generative adversarial LLM attacks (probabilistic, creative) -- what an attacker could invent.
-- Voice OR typed orchestration (human intent -> machine swarm).
-- A static code graph animated by a living swarm (spatial vs behavioral).
-- Red team <-> blue team (attack and defend in one loop).
+The same bundled demo includes source code for a small static scan and a couple of conventional browser checks. These support the security-sweep story; they do not become a general-purpose scanner in the MVP.
 
-Incompatible pairs: source-as-text vs runtime-as-living-behavior; deterministic rules vs generative AI; human conversation vs autonomous machine swarm; attack vs defend. The cross-check is the unexpected power: the deterministic engine confirms generative findings (kills false positives) and the generative engine probes what the static engine flags (goes deeper). No single approach is a real red team; stitched, they are.
+## Run flow
 
-## High-level components
+1. Judge opens the public Cloud Run demo and starts the bundled scan.
+2. Code checks inspect the sample source. The browser agent uses Playwright against the bundled same-origin AI chat target.
+3. The attack agent selects or generates an initial prompt-injection attempt, observes the target response, and can choose a bounded follow-up.
+4. A deterministic evaluator declares a breach only when the synthetic canary value is present. Store and show the prompt, response, target page, and check outcome.
+5. The graph shows observed source files and browser pages. Ghosts travel to nodes as work runs; findings pulse red. The blue-team demo applies a prepared mitigation, captures the ghost, turns the node blue, then retests to animate a shield holding or a breach persisting.
+6. ElevenLabs narration can announce progress and findings if configured. Typed controls and text status remain the default path and work without voice credentials.
 
-- React frontend -- repo-graph viz (React Flow), voice/text bar, findings console, red/blue toggle.
-- FastAPI backend -- auth, tenants, vault, providers, RAG, orchestrator, ghosts, MCP server, threat-intel, voice, findings, jobs, runtime agent.
-- Orchestrator LLM (BYO) -- interprets intent, discovers and calls MCP tools.
-- Ghost-crew MCP server -- exposes attack tools (static analyzer, runtime agent, dynamic fuzzer, RAG extractor, classic scanner, data mapper).
-- Target AI app -- bundled sample vulnerable agent, or the user endpoint.
-- LLM providers -- OpenAI / Anthropic / Gemini.
+## Safety and limits
 
-## The agentic core (voice/text -> LLM -> MCP -> tools)
+- Public demo runs only against its bundled, intentionally vulnerable target. It has no arbitrary URL input.
+- Keep prompt count, response size, runtime, browser navigation, and scan concurrency bounded.
+- The sample's secret is synthetic and contains no real credentials or private data.
+- The model proposes attacks; Playwright executes only against the fixed sample route; deterministic evaluation decides whether the canary was exposed.
+- Map prompt injection to relevant OWASP Top 10 for LLM Applications guidance and conventional findings to web application categories where relevant. The demo does not claim full coverage or that a retest proves overall security.
 
-1. User speaks (ElevenLabs STT) or types a command.
-2. The orchestrator LLM (BYO key) interprets intent.
-3. The orchestrator connects to the ghost-crew MCP server, which exposes attack capabilities as tools.
-4. The orchestrator decides which tools to call and in what order, invoking them via MCP.
-5. Ghost tools execute:
-   - static_analyzer -- reads the target source / prompt flow for injection paths.
-   - runtime_agent -- Playwright drives the live app like an attacker (navigate, click, type, read responses).
-   - dynamic_fuzzer -- the attacker LLM generates and fires injection / jailbreak payloads.
-   - rag_extractor -- prompts the target to exfiltrate RAG content.
-   - classic_scanner -- classic vuln checks (secrets, injection).
-   - data_mapper -- tags a finding with OWASP LLM Top 10 / MITRE ATLAS / CWE.
-6. Findings stream to the UI; the repo graph animates ghosts toward nodes; breaches reveal proof.
-7. ElevenLabs TTS narrates the orchestration and reads findings.
+## Hosted deployment
 
-## Red-team to blue-team loop
+Use one version-pinned Docker service on Google Cloud Run for the UI/API, sample target, and matching Playwright Chromium runtime. Include health checks and one-at-a-time scans. Validate a real hosted Playwright attack in the first two days, before graph and animation work. Keep a local Docker flow for the same sample and scan.
 
-- Red team: orchestrator dispatches ghosts under an attack budget; ghosts attack; findings + proof recorded; ghosts tagged.
-- Blue team: each finding -> suggested mitigation; user applies; orchestrator re-invokes the relevant ghost (including the runtime agent re-driving the live app) to re-test; result = exorcised (fixed) or persists.
-- The loop is visible in the UI (graph + findings console + mode toggle).
+## MVP components
 
-## Multi-tenancy & data isolation
+- **Frontend:** React/Vite graph, findings panel, progress, typed start/retest controls, reduced-motion support.
+- **API and runner:** FastAPI endpoints that start a bounded scan and return progress/results for the bundled target.
+- **Code checks:** a short deterministic roster over the bundled sample source.
+- **Browser agent:** Playwright navigation and interaction limited to the sample origin.
+- **Attack agent:** one LLM-backed prompt-injection loop, hard-limited to a few attempts; the LLM proposes payloads and next steps, not verdicts.
+- **Target app:** small deliberately vulnerable chat page with a synthetic canary and a toggleable mitigation for the retest demo.
+- **Graph:** files/pages and relationships observed during scanning; no invented data-flow edges.
+- **Voice:** optional ElevenLabs TTS narration; STT/voice commands are stretch.
 
-- A tenant is a user account. Every table carries tenant_id; all queries scoped by tenant via a dependency/middleware.
-- LLM keys encrypted at rest (Fernet) with a server master key; never returned to the frontend; never logged.
-- RAG documents and findings stored with tenant_id; cross-tenant access blocked and tested.
-- MVP: per-account isolation. Org-level multi-tenancy is stretch.
+## Model credentials
 
-## Provider-adapter layer (BYO LLM)
+Agentic payload generation requires model access. For the judge-facing deployment, use a developer-configured server-side provider credential stored as a Cloud Run secret and enforce a strict request/token budget. Never expose it to the browser or log it. Keep the app's deterministic code and browser checks usable when model access is absent; clearly disable the agentic attack in that case. Do not require judges to connect their own accounts.
 
-- A provider interface: complete(prompt, **opts) -> response, with adapters for OpenAI, Anthropic, Gemini.
-- One key can serve target + orchestrator + attacker, or separate keys.
-- Optional LiteLLM normalizes calls across providers.
-- Keys validated on save; clear errors on failure.
+## Deferred
 
-## Data model
-
-- tenants(id, email, password_hash, created_at)
-- llm_keys(id, tenant_id, provider, encrypted_key, label, created_at)
-- documents(id, tenant_id, filename, content, chunks, created_at)
-- targets(id, tenant_id, name, kind [sample|endpoint], config)
-- attacks(id, tenant_id, target_id, ghost_class, status, budget, started_at)
-- findings(id, tenant_id, attack_id, ghost_class, owasp_tag, atlas_tag, cwe_tag, severity, payload, leaked_response, mitigation, retest_status)
-- voice_sessions(id, tenant_id, transcript, created_at)
-
-## Security
-
-- Encrypt user keys at rest; never echo key values; never log secrets; reference by name/label only.
-- Enforce tenant_id on every query; isolation covered by tests early.
-- Attacks scoped to the target the user owns (their own app/RAG) -- a red-team tool for your own systems.
-- Enforce attack budgets and timeouts to control LLM spend and prevent runaway loops.
-- Treat leaked responses as sensitive data.
+Arbitrary user targets, uploads, auth/tenancy, multi-provider support, RAG, MCP tool discovery, multi-agent swarms, broad OWASP checks, automatic code changes, persistent histories, and live threat intelligence.

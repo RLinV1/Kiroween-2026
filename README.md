@@ -1,8 +1,8 @@
 # Kage Crew
 
-Kage Crew is a graph-based security workbench where a crew of agents scans code and uses Playwright to test a running website. Ghosts move through the files and pages they inspect, then surface findings with evidence. ElevenLabs gives the crew voice commands and narration.
+Kage Crew is a graph-based security workbench centered on an agentic prompt-injection attack. An attack agent adapts a bounded sequence of prompts while Playwright drives a bundled AI website and captures evidence. Code checks, the animated graph, and ElevenLabs narration round out the crew's security sweep.
 
-Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings static code analysis, live browser testing, an animated graph, and voice interaction together in one security tool.
+Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings static code analysis, live browser testing, an animated graph, and optional voice narration together in one security tool.
 
 ## Why the name
 
@@ -10,14 +10,15 @@ Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings 
 
 ## The MVP
 
-The one-month MVP is a bounded security sweep informed by the OWASP Top 10 for web applications. It maps only the categories covered by its implemented checks; it does not claim complete OWASP coverage or guarantee that a site is secure.
+The two-week MVP is a bounded, live demo. The prompt-injection attack maps to applicable OWASP Top 10 for LLM Applications guidance; conventional code checks map to the OWASP Top 10 for Web Applications only where relevant. It does not claim complete coverage of either list or guarantee that a site is secure.
 
 - **Code scan:** deterministic checks for a small set of clear issues, with file and line evidence where available.
-- **Playwright scan:** safe, bounded navigation and checks against a running website, with the page, action, and observed result recorded.
+- **Agentic attack:** a single LLM-backed agent chooses and adapts prompt-injection attempts based on observed responses, with a strict attempt limit. A deterministic canary check decides whether the synthetic secret leaked.
+- **Playwright scan:** drives the bundled AI website, submits attack prompts, and records the page, action, and observed response. A small number of safe browser checks supplement the attack.
 - **Ghost crew graph:** files, modules, and observed pages appear as nodes; animated agents show scan progress and findings.
 - **Evidence and retesting:** findings include relevant OWASP mapping and remediation guidance, with a way to rerun a check after a fix.
-- **Voice:** ElevenLabs provides narration and a small set of commands; typed controls remain available.
-- **Working demo URL:** the deployed app includes a bundled sample project and intentionally vulnerable website so judges can try the core loop without uploading their own code. Local development and testing are supported too.
+- **Voice:** ElevenLabs narration is a stretch feature after the attack loop works; typed controls remain available. Voice commands are deferred.
+- **Working demo URL:** the deployed app includes a bundled sample project and intentionally vulnerable AI website so judges can try the core loop without setup. Local development and testing are supported too.
 
 The hosted demo is restricted to the bundled target. Arbitrary site scans require authorization and clear scope. Voice and model-assisted extras may depend on external services; the core sample scan should remain usable without them.
 
@@ -36,7 +37,7 @@ Kage Crew is built with Kiro through spec-driven development and documented impl
 - [MVP brainstorming](docs/MVP_BRAINSTORM.md)
 - [Four-week plan](docs/MILESTONES.md)
 - [Kiro usage](docs/KIRO_USAGE.md)
-- [Requirements and design specs](.kiro/specs/specter/)
+- [Requirements and design specs](.kiro/specs/kage-crew/)
 
 ## License
 

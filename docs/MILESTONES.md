@@ -2,13 +2,13 @@
 
 ## Product goal
 
-Kage Crew is a web security demo where a crew of agents scans code and uses Playwright to test a running website. A graph shows the files and pages they inspect, their progress, and where findings appear. The judge can open evidence and rerun a check after a fix.
+Kage Crew is a web security demo centered on an agentic prompt-injection attack. An attack agent adapts a bounded sequence of prompts while Playwright drives a bundled AI website and captures evidence. Code checks, a graph of inspected files/pages, and a retest loop support the attack story.
 
-The MVP is a bounded sweep informed by the OWASP Top 10 for web applications. It implements a small, explicit set of checks and maps only those checks to relevant categories; it does not claim complete OWASP coverage or guarantee security.
+The MVP is a bounded sweep. Map the prompt-injection finding to relevant OWASP Top 10 for LLM Applications guidance, and conventional code/browser checks to the OWASP Top 10 for Web Applications where relevant. Do not claim full coverage of either list or guarantee security.
 
 ## Demo design
 
-The submission URL opens a working hosted demo. The judge clicks **Start demo scan** and sees two agents check a bundled, intentionally vulnerable sample: one scans its source code and one uses Playwright on its running website. Findings show the file or page, what the agent did, observed evidence, a relevant OWASP category, and a suggested fix. A prepared fix can be applied and retested so the judge sees the result change.
+The submission URL opens a working hosted demo. The judge clicks **Start demo attack** and sees a prompt-injection agent choose attempts, Playwright submit them to the bundled vulnerable AI chat page, and a bounded follow-up adapt to the observed response. The model proposes attacks; a deterministic canary check verifies whether the synthetic secret leaked. A small code-check ghost scans the bundled source in the same run. Findings show the page/file, prompt or check, observed evidence, a relevant OWASP category, and a suggested fix. A prepared mitigation can be applied and the same attack rerun.
 
 ### Deployment shape
 
@@ -27,15 +27,16 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 - Build a minimal Docker image and deploy a health-check app to Cloud Run immediately.
 - Bundle a small intentionally vulnerable website and its source code.
 - Run Playwright against the deployed sample from the hosted scan service; pin matching Playwright/browser versions and verify Chromium starts in that environment.
-- Return one real browser observation and one real code finding with evidence.
+- Return one real Playwright prompt attempt and response, one deterministic canary evaluation, and one real code finding with evidence.
 
 **Gate:** if hosted Playwright is not working by the end of day 2, try running the scanner and sample app in the same Docker service and verify again. If it still fails, choose another Docker host before adding features. Do not build graph polish before this path works.
 
-### Days 3–5 — scan and findings
+### Days 3–5 — agentic attack and findings
 
-- Add a very small deterministic roster: for example, exposed test secret and unsafe output handling in code, plus one or two safe browser checks against the sample.
-- Bound page navigation, scan duration, and requests; keep all browser activity on the bundled same-origin target.
-- Show findings with file/page, action, observed evidence, category mapping, and suggested fix.
+- Add the LLM-backed attack loop: generate a prompt-injection attempt, observe the response through Playwright, and choose a bounded follow-up based on that response.
+- Limit the attack to a few attempts against the bundled AI route, with request/time budgets and a synthetic canary. The deterministic evaluator alone marks a confirmed leak.
+- Add one or two deterministic code checks and a safe browser observation to support the broader sweep.
+- Show findings with file/page, prompt/action, observed evidence, applicable OWASP LLM or web application mapping, and suggested fix.
 
 ### Days 6–8 — graph crew
 
@@ -46,7 +47,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 ### Days 9–10 — retest and experience
 
-- Add a prepared sample fix and a per-finding retest that demonstrates a changed result.
+- Add a prepared prompt-defense change and per-attack retest that demonstrates the agent no longer extracts the canary (or still succeeds if the issue remains).
 - Show the blue-team capture beam containing a finding ghost and turning its node blue; on retest, animate a shield holding when fixed or the ghost breaking through when the issue remains.
 - Add basic visual polish, clear empty/error states, and a simple landing/start-scan path.
 - Add ElevenLabs narration if credentials and integration are ready; keep text status and controls complete without audio. Voice commands are stretch.
@@ -61,15 +62,16 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, at least one real code check, graph with visible agents, evidence-backed findings, and a working retest example.
 
-Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, AI-generated attacks, and provider sign-in. Keep only brief, readable graph animations; respect reduced-motion settings. ElevenLabs narration is the first stretch item after the core scan loop works.
+Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, multiple agents, and provider sign-in. Keep the one bounded LLM attack agent because it is the centerpiece. Keep animations brief and respect reduced-motion settings.
 
 ## Scope limits
 
-- No complete OWASP Top 10 coverage claim; show which categories the implemented checks cover and mark others as not covered.
+- No complete OWASP Top 10 coverage claim; distinguish LLM application mappings for prompt injection from web application mappings for conventional checks, and mark uncovered categories.
 - No arbitrary public target scanning, unrestricted crawling, destructive tests, or unauthorized use.
 - No multi-tenant accounts, arbitrary repository uploads, multiple LLM providers, RAG features, live threat feeds, or automatic code edits.
-- AI can explain findings, but initial findings must be based on observable evidence.
+- The LLM proposes attacks and adapts to responses; it does not decide whether an attack succeeded. A deterministic canary match confirms the finding.
+- Store the LLM credential only server-side as a Cloud Run secret, enforce a strict usage budget, and disable the agentic attack clearly when no key is configured. The public judge flow must use the project-configured key, not ask judges to bring one.
 
 ## Acceptance demo
 
-From the submission URL, a judge starts the bundled scan without setup or credentials. They see source and browser agents scan the sample, follow their activity in the graph, inspect evidence and OWASP mapping, apply the prepared fix, and rerun the check to see its result change. The core path works with voice disabled and takes about three minutes.
+From the submission URL, a judge starts the bundled attack without setup or credentials. They see the agent adapt a prompt based on a Playwright-observed response, inspect the prompt/response and deterministic canary verdict, follow the agents in the graph, apply the prepared mitigation, and rerun the attack to see whether the leak persists. The core path works without voice and takes about three minutes.
