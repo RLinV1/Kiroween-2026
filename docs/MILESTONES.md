@@ -10,18 +10,26 @@ The MVP is a bounded sweep informed by the OWASP Top 10 for web applications. It
 
 The submission URL opens a working hosted demo. The judge clicks **Start demo scan** and sees two agents check a bundled, intentionally vulnerable sample: one scans its source code and one uses Playwright on its running website. Findings show the file or page, what the agent did, observed evidence, a relevant OWASP category, and a suggested fix. A prepared fix can be applied and retested so the judge sees the result change.
 
+### Deployment shape
+
+- Package the web app, API, bundled sample site/source, and Playwright Chromium in a version-pinned Docker image. Serve the UI and API from one web service to keep the demo path simple.
+- Use Render's Docker web service as the initial deployment target. Confirm the browser launches and the sample scan completes there before building the graph experience; change hosts only if this proof fails.
+- Add a health endpoint and a visible scan status/error. Keep scans single-worker and bounded for predictable resource use.
+- Treat only the bundled sample as a permitted target in the public demo. Do not expose an arbitrary URL input to public visitors.
+- Keep a local Docker path so the same image and scan flow can be reproduced during development.
+
 The hosted demo scans only this bundled target. It requires no judge API key, account, code upload, or access to the judge's computer. Keep local development supported. Do not allow public visitors to scan arbitrary websites.
 
 ## Two-week plan
 
 ### Days 1–2 — prove the hosted browser path
 
-- Select the deployment target and deploy a minimal health-check app immediately.
+- Build a minimal Docker image and deploy a health-check app to Render immediately.
 - Bundle a small intentionally vulnerable website and its source code.
-- Run Playwright against the deployed sample from the hosted scan service; verify the browser installs and runs in that environment.
+- Run Playwright against the deployed sample from the hosted scan service; pin matching Playwright/browser versions and verify Chromium starts in that environment.
 - Return one real browser observation and one real code finding with evidence.
 
-**Gate:** if hosted Playwright is not working by the end of day 2, switch to a host that supports a bundled browser or run the scanner in the same container as the demo app. Do not build graph polish before this path works.
+**Gate:** if hosted Playwright is not working by the end of day 2, try running the scanner and sample app in the same Docker service and verify again. If it still fails, choose another Docker host before adding features. Do not build graph polish before this path works.
 
 ### Days 3–5 — scan and findings
 
