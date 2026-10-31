@@ -4,11 +4,11 @@ Kage Crew is being built with Kiro for Kiroween 2026's Frankenstein category. Sp
 
 ## Spec-driven scope
 
-Requirements and design live in `.kiro/specs/kage-crew/`. They define the Repo Scout, Code Security, Playwright Web Attack, AI/RAG Red Team, and Evidence Verifier roles; the fixed workflow graph; input/target limits; finding evidence; graph behavior; and hosted deployment.
+Requirements and design live in `.kiro/specs/kage-crew/`. They define the Code Scout, Web Attack, and RAG Attack ghost crews, the Ghostbusters blue team, the fixed workflow graph, input/target limits, finding evidence, and hosted deployment.
 
 ## Agentic security behavior
 
-The coordinator dispatches fixed specialist workers and tracks their progress. The AI/RAG worker may use the target's observed responses to select a bounded follow-up prompt. Playwright attacks only the hosted lab; repository code is never executed. Deterministic verifiers decide whether findings are confirmed. The LLM does not grade its own success. Attempts, time, and model usage are capped.
+The coordinator dispatches distinct ghost crews and tracks their progress. The RAG Attack crew may use the target's observed responses to select a bounded follow-up prompt. Playwright attacks only the hosted lab; repository code is never executed. The Ghostbusters verify findings and decide whether retests clear them. The LLM does not grade its own success. Attempts, time, and model usage are capped.
 
 ## Honest MVP boundaries
 
@@ -16,4 +16,4 @@ The hosted demo accepts a public GitHub repository for read-only source checks a
 
 ## Kiro practices
 
-Use Kiro specs for product constraints and interface behavior, and iterative agent-assisted development for worker boundaries, attack prompts, and response handling. Keep decisions and limitations documented. The coordinator and named specialist workers are MVP requirements; extra agents, hooks, and MCP integrations are not.
+Use Kiro specs for product constraints and interface behavior, and iterative agent-assisted development for crew boundaries, attack prompts, and response handling. Keep decisions and limitations documented. The coordinator, named ghost crews, and Ghostbusters retest behavior are MVP requirements; extra crews, hooks, and MCP integrations are not.

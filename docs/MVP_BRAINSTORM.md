@@ -17,13 +17,13 @@ Build a judge-ready Kage Crew web demo in one month. A bounded multi-agent coord
 ## Goals
 
 - Publish a working demo URL where judges can submit a public GitHub repository and run the hosted lab.
-- Use a bounded coordinator to dispatch Repo Scout, Code Security, Web Attack, AI/RAG Red Team, and Evidence Verifier workers.
+- Use a bounded coordinator to dispatch Code Scout, Web Attack, and RAG Attack ghost crews, then dispatch Ghostbusters to verify and retest.
 - Check repositories read-only for secrets, dependencies, and common source issues; never execute them.
 - Run non-destructive SQLi and XSS checks against the lab and bounded prompt-injection/RAG checks against its actual retrieval chat.
 - Allow one live `.txt` or `.md` document ingestion into the lab to demonstrate poisoning and possible canary leakage.
 - Use deterministic evidence to confirm results; the LLM does not grade its own attacks.
 - Map confirmed AI findings to relevant OWASP LLM categories and conventional checks to relevant OWASP Web Application categories. Mark untested risks clearly.
-- Show workers, repository files, lab pages, retrieved chunks, and findings as graph nodes connected by observed run events.
+- Show ghost crews, repository files, lab pages, retrieved chunks, and findings as graph nodes connected by observed run events.
 - Use a few clear animations to show scanning, findings, the blue-team capture, and retest outcomes.
 - Present evidence, relevant OWASP mapping, suggested fixes, and individual retests.
 - Display all ten OWASP LLM risks in a coverage map; clearly distinguish implemented checks from risks not tested by this demo.
@@ -38,7 +38,7 @@ Build a judge-ready Kage Crew web demo in one month. A bounded multi-agent coord
 
 ## Proposed run
 
-The judge submits a public GitHub URL and starts a scan. The coordinator dispatches a read-only repo/code lane and browser/AI attack workers against the hosted lab. The Playwright crew checks SQLi and XSS; the AI/RAG agent attacks the retrieval chat, using one document ingested during the demo. Evidence Verifier confirms each result and the graph shows workers, source files, lab routes, retrieved chunks, and proof. Findings include target, check, evidence, relevant OWASP mapping, and remediation. The judge applies a prepared lab fix and retests; Ghostbusters capture only verified fixes. ElevenLabs narration is optional.
+The judge submits a public GitHub URL and starts a scan. The coordinator dispatches the Code Scout crew and the two lab attack crews. Web Attack checks SQLi and XSS; RAG Attack tests the retrieval chat, using one document ingested during the demo. Ghostbusters verify each result and retest after a fix. The graph shows each crew, source files, lab routes, retrieved chunks, and proof. Findings include target, check, evidence, relevant OWASP mapping, and remediation. Ghostbusters capture only verified fixes. ElevenLabs narration is optional.
 
 Ghosts emerge at scan start and travel to the nodes being checked. A finding pulses red and opens its evidence. The blue-team capture beam contains that ghost and turns the node blue. On retest, a shield holds if the issue no longer reproduces; otherwise, the ghost breaks through. Keep motion brief and respect reduced-motion preferences.
 
@@ -50,7 +50,7 @@ The one-month plan is in `docs/MILESTONES.md`: first prove Cloud Run, repository
 
 ## Builder decisions
 
-- Keep the coordinator workflow fixed and bounded; use specialist workers with explicit input, output, and limits.
+- Keep the coordinator workflow fixed and bounded; give each ghost crew explicit inputs, outputs, and limits.
 - Choose one stable model provider and a hard limit of a few AI/RAG attack attempts; keep code, SQLi, and XSS checks deterministic where possible.
 - Use deterministic evidence checks for whether a finding exists; never let AI fabricate proof or grade its own attack.
 - Select hosting that supports the app and Playwright browser service within the available time and budget.
