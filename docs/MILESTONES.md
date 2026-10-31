@@ -13,7 +13,7 @@ The submission URL opens a working hosted demo. The judge clicks **Start demo sc
 ### Deployment shape
 
 - Package the web app, API, bundled sample site/source, and Playwright Chromium in a version-pinned Docker image. Serve the UI and API from one web service to keep the demo path simple.
-- Use Render's Docker web service as the initial deployment target. Confirm the browser launches and the sample scan completes there before building the graph experience; change hosts only if this proof fails.
+- Use Google Cloud Run as the initial deployment target. It accepts a container image and provides a service URL for the judge demo. Confirm the browser launches and the sample scan completes there before building the graph experience; Azure App Service Linux containers are the fallback if Cloud Run fails this proof.
 - Add a health endpoint and a visible scan status/error. Keep scans single-worker and bounded for predictable resource use.
 - Treat only the bundled sample as a permitted target in the public demo. Do not expose an arbitrary URL input to public visitors.
 - Keep a local Docker path so the same image and scan flow can be reproduced during development.
@@ -24,7 +24,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 ### Days 1–2 — prove the hosted browser path
 
-- Build a minimal Docker image and deploy a health-check app to Render immediately.
+- Build a minimal Docker image and deploy a health-check app to Cloud Run immediately.
 - Bundle a small intentionally vulnerable website and its source code.
 - Run Playwright against the deployed sample from the hosted scan service; pin matching Playwright/browser versions and verify Chromium starts in that environment.
 - Return one real browser observation and one real code finding with evidence.
