@@ -4,6 +4,8 @@ An AI red-teaming and blue-teaming workbench for the agentic-AI era. A Frankenst
 
 Built for **Kiroween 2026** (Frankenstein category).
 
+“Kage” (影) means “shadow” in Japanese. It fits the ghost agents that move through a codebase and probe a running site, while “Crew” suggests a coordinated team of specialized scanners. Together, Kage Crew gives the security agents a memorable identity that supports the project's haunted graph and makes the work visible to developers.
+
 ## Why this matters now
 
 Over the last few weeks alone, attackers have targeted AI infrastructure directly. The October 2026 Railway breach went after AI provider API keys as part of what Railway called a coordinated campaign against AI inference providers; a poisoned LiteLLM release hit the AI tooling ecosystem in the same window. As developers move to agentic development (AI agents, MCP servers, RAG pipelines), they inherit a brand-new attack surface that traditional security scanners were never built to test.

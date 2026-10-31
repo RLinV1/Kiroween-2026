@@ -4,6 +4,10 @@
 
 Build a judge-ready web demo of Kage Crew: a crew of AI-assisted security agents that scan code and use Playwright to test a running site. The graph makes the agents' paths and findings visible; ElevenLabs gives the crew a voice. The product should show how static code checks and live browser behavior complement each other.
 
+## Name
+
+“Kage” (影) means “shadow” in Japanese, suggesting the ghost agents that quietly trace a codebase and probe a site's behavior. “Crew” emphasizes that the scanners work as a coordinated team. The name keeps the compact, agent-team feel that inspired it while giving this project its own identity.
+
 ## Approaches considered
 
 1. **Prompt-injection lab only.** Fast to build, but too narrow for a regular website security sweep and does not demonstrate code scanning alongside browser testing.
