@@ -14,7 +14,7 @@ Kage Crew is a judge-accessible, graph-based security demo. Its centerpiece is a
 6. **Code checks:** a small deterministic roster over the bundled target source, with file and line evidence when available.
 7. **Graph and ghosts:** show observed files/pages and checks as nodes; animate agents along observed relationships; connect findings to evidence nodes.
 8. **Blue-team demo:** apply the prepared prompt-defense change, capture the attacking ghost, and rerun the same bounded attack. Report whether the canary still appears.
-9. **OWASP mapping:** map prompt injection to applicable OWASP Top 10 for LLM Applications guidance and conventional findings to OWASP Top 10 for Web Applications categories where relevant. Mark unsupported categories not covered.
+9. **OWASP mapping:** follow OWASP Top 10 for LLM Applications 2026. Map the prompt-injection attack to LLM01:2026; map an observed canary leak to LLM02:2026 Sensitive Information Disclosure as impact. Map conventional findings to Web Application Top 10 categories only where relevant. See `docs/OWASP_MAPPING.md` and mark unsupported categories not covered.
 10. **Voice stretch:** ElevenLabs narration may announce progress/findings. Typed controls and visible text status are required even when voice is unavailable.
 
 ## Public-demo safety

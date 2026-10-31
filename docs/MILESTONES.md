@@ -4,7 +4,7 @@
 
 Kage Crew is a web security demo centered on an agentic prompt-injection attack. An attack agent adapts a bounded sequence of prompts while Playwright drives a bundled AI website and captures evidence. Code checks, a graph of inspected files/pages, and a retest loop support the attack story.
 
-The MVP is a bounded sweep. Map the prompt-injection finding to relevant OWASP Top 10 for LLM Applications guidance, and conventional code/browser checks to the OWASP Top 10 for Web Applications where relevant. Do not claim full coverage of either list or guarantee security.
+Follow the OWASP Top 10 for LLM Applications 2026 for the centerpiece: **LLM01:2026 Prompt Injection**, with **LLM02:2026 Sensitive Information Disclosure** when the synthetic canary leaks. Conventional code/browser checks may map to OWASP Top 10 for Web Applications where relevant. Record the test evidence and do not claim full coverage or guarantee security; see [the mapping](OWASP_MAPPING.md).
 
 ## One-month overview
 

@@ -12,7 +12,7 @@ The attack agent uses the target's observed responses to select a bounded follow
 
 ## Honest MVP boundaries
 
-The hosted demo runs against one bundled target and does not claim complete OWASP Top 10 coverage. The model key is a server-side deployment secret; the judge does not provide credentials. ElevenLabs narration is optional, while typed controls and visible results remain available.
+The hosted demo runs against one bundled target. Its prompt-injection test follows OWASP Top 10 for LLM Applications 2026: LLM01:2026 is the attack class, and LLM02:2026 is noted only when the canary is exposed. See `docs/OWASP_MAPPING.md`. The project does not claim complete OWASP coverage. The model key is a server-side deployment secret; the judge does not provide credentials. ElevenLabs narration is optional, while typed controls and visible results remain available.
 
 ## Kiro practices
 

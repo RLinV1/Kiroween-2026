@@ -28,4 +28,4 @@
 
 ## Scope rationale
 
-Use a single model provider and a fixed target so the agentic attack is easy to explain and the live scan is predictable. Map prompt injection to OWASP Top 10 for LLM Applications and conventional checks to the OWASP Top 10 for Web Applications where relevant. Neither mapping implies complete coverage. The defining demo is the bounded prompt-injection agent acting through Playwright, with code checks and the graph supporting the broader security story.
+Use a single model provider and a fixed target so the agentic attack is easy to explain and the live scan is predictable. Follow OWASP LLM01:2026 Prompt Injection for the primary attack and LLM02:2026 Sensitive Information Disclosure when the canary is confirmed exposed. See [the mapping](OWASP_MAPPING.md). Conventional checks map to web application risks only where applicable; no mapping implies full coverage.

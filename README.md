@@ -10,7 +10,7 @@ Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings 
 
 ## The MVP
 
-The two-week MVP is a bounded, live demo. The prompt-injection attack maps to applicable OWASP Top 10 for LLM Applications guidance; conventional code checks map to the OWASP Top 10 for Web Applications only where relevant. It does not claim complete coverage of either list or guarantee that a site is secure.
+The two-week MVP follows the [OWASP Top 10 for LLM Applications 2026](https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/): the primary attack maps to **LLM01:2026 Prompt Injection**, with **LLM02:2026 Sensitive Information Disclosure** as a secondary mapping when the synthetic canary leaks. See [our mapping and test evidence](docs/OWASP_MAPPING.md). This is a bounded test, not full OWASP coverage or a guarantee that a site is secure.
 
 - **Code scan:** deterministic checks for a small set of clear issues, with file and line evidence where available.
 - **Agentic attack:** a single LLM-backed agent chooses and adapts prompt-injection attempts based on observed responses, with a strict attempt limit. A deterministic canary check decides whether the synthetic secret leaked.

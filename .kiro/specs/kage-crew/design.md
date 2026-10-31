@@ -4,7 +4,7 @@
 
 The judge opens the Cloud Run URL and clicks **Start demo attack**. The graph shows code and browser ghosts moving through a bundled sample project and its AI chat page. The central attack ghost sends a prompt-injection attempt through Playwright, reads the visible response, and chooses a limited follow-up based on what it observed. A deterministic canary check confirms or rejects a leak.
 
-Findings show the file or page, the prompt/check, observed response or source evidence, applicable OWASP category, and suggested mitigation. The judge applies a prepared prompt-defense change and clicks **Retest**. A capture-beam animation contains the ghost; the node turns blue. The ghost revisits the target: a shield holds if the canary stays hidden, or the ghost breaks through if it leaks again.
+Findings show the file or page, the prompt/check, observed response or source evidence, applicable OWASP category, and suggested mitigation. The primary attack is mapped to OWASP LLM01:2026 Prompt Injection; a verified canary leak is also mapped to LLM02:2026 Sensitive Information Disclosure. The judge applies a prepared prompt-defense change and clicks **Retest**. A capture-beam animation contains the ghost; the node turns blue. The ghost revisits the target: a shield holds if the canary stays hidden, or the ghost breaks through if it leaks again. Refer to `docs/OWASP_MAPPING.md` for scope and evidence rules.
 
 All actions are available as typed controls. ElevenLabs narration can announce milestones and findings if configured. The scan remains usable without audio.
 

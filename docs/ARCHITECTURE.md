@@ -21,7 +21,7 @@ The same bundled demo includes source code for a small static scan and a couple 
 - Keep prompt count, response size, runtime, browser navigation, and scan concurrency bounded.
 - The sample's secret is synthetic and contains no real credentials or private data.
 - The model proposes attacks; Playwright executes only against the fixed sample route; deterministic evaluation decides whether the canary was exposed.
-- Map prompt injection to relevant OWASP Top 10 for LLM Applications guidance and conventional findings to web application categories where relevant. The demo does not claim full coverage or that a retest proves overall security.
+- Map the attack to OWASP LLM01:2026 Prompt Injection, and map a verified canary leak to LLM02:2026 Sensitive Information Disclosure. Conventional findings may map to web application categories where relevant. See [the mapping](OWASP_MAPPING.md); the demo does not claim full coverage or that a retest proves overall security.
 
 ## Hosted deployment
 

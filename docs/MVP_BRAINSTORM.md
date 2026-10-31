@@ -19,7 +19,7 @@ Build a judge-ready web demo of Kage Crew in two weeks, centered on an agentic p
 - Publish a working demo URL with a bundled sample project and intentionally vulnerable site.
 - Make one bounded LLM-backed prompt-injection agent the centerpiece; it adapts a follow-up based on Playwright-observed responses.
 - Use a deterministic canary match to verify success; do not let the LLM declare its own attack successful.
-- Map prompt injection to applicable OWASP Top 10 for LLM Applications guidance; map conventional checks to the OWASP Top 10 for Web Applications only where relevant.
+- Follow OWASP Top 10 for LLM Applications 2026: map the primary attack to LLM01:2026 Prompt Injection and a confirmed canary leak to LLM02:2026 Sensitive Information Disclosure. Map conventional checks to the OWASP Top 10 for Web Applications only where relevant.
 - Include a small set of evidence-based code and browser checks.
 - Restrict Playwright to the bundled AI target and safe same-origin actions.
 - Show files, observed pages, checks, and findings in a graph; do not imply inferred relationships are proven data flow.
