@@ -42,10 +42,12 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 - Render the sample's source files and observed website pages as graph nodes.
 - Show code and Playwright agents moving across the nodes they actually inspect.
 - Highlight findings on their source or page node and show progress/error states.
+- Animate ghosts spawning at scan start and traveling to checked nodes. Pulse a node red when a finding appears and reveal its evidence marker.
 
 ### Days 9–10 — retest and experience
 
 - Add a prepared sample fix and a per-finding retest that demonstrates a changed result.
+- Show the blue-team capture beam containing a finding ghost and turning its node blue; on retest, animate a shield holding when fixed or the ghost breaking through when the issue remains.
 - Add basic visual polish, clear empty/error states, and a simple landing/start-scan path.
 - Add ElevenLabs narration if credentials and integration are ready; keep text status and controls complete without audio. Voice commands are stretch.
 
@@ -59,7 +61,7 @@ The hosted demo scans only this bundled target. It requires no judge API key, ac
 
 Must ship: public demo URL, bundled sample and source, one real hosted Playwright run, at least one real code check, graph with visible agents, evidence-backed findings, and a working retest example.
 
-Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, AI-generated attacks, and provider sign-in. ElevenLabs narration is the first stretch item after the core scan loop works.
+Cut first if time runs short: voice commands, ElevenLabs narration, extra vulnerability checks, complex graph edges, custom uploads, AI-generated attacks, and provider sign-in. Keep only brief, readable graph animations; respect reduced-motion settings. ElevenLabs narration is the first stretch item after the core scan loop works.
 
 ## Scope limits
 

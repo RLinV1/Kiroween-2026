@@ -20,6 +20,7 @@ Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agent
 - Run a small set of evidence-based code and browser checks informed by the OWASP Top 10 for web applications.
 - Use Playwright for bounded, same-origin navigation and safe interactions.
 - Show files, observed pages, checks, and findings in a graph; do not imply inferred relationships are proven data flow.
+- Use a few clear animations to show scanning, findings, the blue-team capture, and retest outcomes.
 - Present evidence, relevant OWASP mapping, suggested fixes, and individual retests.
 - Use ElevenLabs for narration and a small voice-command set, with typed controls available throughout.
 - Let judges experience the demo without API credentials, repository uploads, or broad permissions.
@@ -33,6 +34,8 @@ Build a judge-ready web demo of Kage Crew in two weeks: a crew of security agent
 ## Proposed run
 
 The judge opens the deployed app and starts the bundled sample scan. Code ghosts run deterministic checks against the sample project; browser ghosts use Playwright on its paired demo website. Both streams populate a graph of observed files and pages. Findings include source/page, check, action, observed proof, applicable OWASP category, and remediation guidance. The judge applies a safe sample fix and reruns that check. ElevenLabs narrates progress when configured; the UI remains fully operable when voice is unavailable.
+
+Ghosts emerge at scan start and travel to the nodes being checked. A finding pulses red and opens its evidence. The blue-team capture beam contains that ghost and turns the node blue. On retest, a shield holds if the issue no longer reproduces; otherwise, the ghost breaks through. Keep motion brief and respect reduced-motion preferences.
 
 ## Success and constraints
 
