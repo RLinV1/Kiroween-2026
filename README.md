@@ -1,78 +1,44 @@
-﻿# Kage Crew
+# Kage Crew
 
-An AI red-teaming and blue-teaming workbench for the agentic-AI era. A Frankenstein that stitches incompatible security paradigms into one autonomous crew that attacks your AI app, then defends it.
+Kage Crew is a graph-based security workbench where an orchestrator dispatches specialized ghost crews. The Code Scout crew scans a public GitHub repository; the Web Attack crew tests SQL injection and XSS with Playwright; and the RAG Attack crew probes a hosted retrieval chat for prompt injection and data leakage. Ghostbusters verify findings and retest fixes before clearing haunted nodes.
 
-Built for **Kiroween 2026** (Frankenstein category).
+Built for **Kiroween 2026**, in the **Frankenstein** category: Kage Crew brings repository analysis, browser security testing, adaptive AI red teaming, deterministic verification, and a graph-based ghost crew together in one security tool.
 
-## Why this matters now
+## Why the name
 
-Over the last few weeks alone, attackers have targeted AI infrastructure directly. The October 2026 Railway breach went after AI provider API keys as part of what Railway called a coordinated campaign against AI inference providers; a poisoned LiteLLM release hit the AI tooling ecosystem in the same window. As developers move to agentic development (AI agents, MCP servers, RAG pipelines), they inherit a brand-new attack surface that traditional security scanners were never built to test.
+“Kage” (影) means “shadow” in Japanese. It evokes the ghost agents quietly tracing a codebase and probing a site's behavior. “Crew” describes their coordinated roles: some inspect code, while others use a browser to test the running site. The name gives the agents a distinct identity and ties directly to the haunted graph experience.
 
-## What Kage Crew does
+## The MVP
 
-Kage Crew is an AI security workbench where code-scanning and Playwright agents inspect a project and its running website. Ghosts traverse a graph of observed files and pages, report evidence-backed findings, and narrate their work through ElevenLabs.
+The one-month MVP uses a public GitHub link for read-only source analysis and a separate, hosted lab for active attacks. Its UI shows all ten OWASP LLM risks in a coverage map and marks checks that are not implemented. The lab includes bounded SQL injection and XSS checks plus an actual RAG chat that can ingest one Markdown or text document for prompt-injection and leakage testing. Verified canary exposure maps to **LLM02:2026 Sensitive Information Disclosure**. See [our mapping and evidence rules](docs/OWASP_MAPPING.md); displaying the full list does not imply full coverage.
 
-- **Red team (attack):** the ghost crew attacks your system across stitched paradigms, iterating until it breaks or an attack budget is exhausted. Every finding ships with proof.
-- **Blue team (defend):** each finding surfaces a suggested mitigation. You apply it, and the orchestrator re-invokes the relevant ghost to confirm the fix holds. Exorcised (fixed) vs. persists (still vulnerable).
+- **Repo scan:** deterministic secret, dependency, and common source checks scan a public GitHub snapshot without executing it. Findings include file/line evidence when available, and secret values are redacted.
+- **Ghost crews:** a bounded coordinator dispatches the Code Scout, Web Attack, and RAG Attack crews. Ghostbusters verify evidence and run fix retests. Only the RAG Attack crew uses an LLM to adapt attempts; deterministic checks confirm findings.
+- **Live attack lab:** Playwright checks SQLi and XSS against controlled routes and drives the lab's RAG chat. A judge can ingest one document during the demo; retrieval evidence and a synthetic canary make leakage results verifiable.
+- **Ghost crew graph:** crews, repository files, lab pages, retrieved chunks, findings, and evidence appear as nodes. Ghostbusters capture a finding ghost only after a successful verified retest.
+- **Evidence and retesting:** findings include relevant OWASP mapping and remediation guidance, with a way to rerun a check after a fix.
+- **Voice:** ElevenLabs narration is a stretch feature after the attack loop works; typed controls remain available. Voice commands are deferred.
+- **Working demo URL:** judges can submit a public GitHub URL and run attacks against the hosted lab without installing the project or supplying personal API credentials. Local Docker development uses the same lab.
 
-## Why Kage Crew is a Frankenstein
+Active attacks are restricted to the hosted lab. Repository analysis is read-only and bounded; unsupported languages or checks are shown as such. Arbitrary live-site attacks and a local-development CLI are future work. ElevenLabs narration is optional and cannot block the core scan.
 
-Kage Crew stitches together different security approaches that normally live in separate tools:
+## Scope and schedule
 
-1. **Static source-code analysis** (deterministic, no AI) -- what the code IS.
-2. **Live runtime driving via Playwright** (a browser agent that actually clicks, types, and reads responses) -- what the app DOES.
-3. **Generative adversarial LLM attacks** (probabilistic, creative, human-like) -- what an attacker could invent.
-4. **Voice OR typed orchestration** (conversational human intent driving a relentless machine swarm) -- speak or type to command the crew.
-5. **A static repo-graph animated by a living swarm** (spatial structure vs behavioral attack) -- the code as a map, made alive by ghosts.
-6. **Red team to blue team** -- attack and defend as adversarial opposites in one loop.
-
-The incompatible pairs are real:
-- Source-as-text vs runtime-as-living-behavior (a scanner that reads code vs a browser that drives the app).
-- Deterministic rules vs generative AI (reliable known-pattern detection vs creative novel-exploit generation).
-- Human conversation vs autonomous machine swarm (you speak or type; the crew executes relentlessly).
-- Attack vs defend (red and blue team in one tool).
-
-No single approach is a real red team. Stitched and cross-checked -- the deterministic engine confirms the generative findings (kills false positives), and the generative engine probes what the static engine flags (goes deeper) -- together they are. That is the "unexpectedly powerful."
-
-The Frankenstein theme is structural, not a skin: the target AI system is the "creature"; the paradigms are incompatible "limbs" stitched onto it; a prompt-injection vulnerability is a "ghost" that corrupts it; applying a mitigation "exorcises" the ghost. The attack-to-defend loop is the architecture.
-
-## The agentic core
-
-You speak or type a command. ElevenLabs (or text) turns it to intent. An LLM orchestrator interprets it and uses **MCP** to discover and invoke the ghost-crew attack tools, deciding which to call and in what order. The ghosts attack -- by reading the code (static), driving the live app (Playwright), and generating creative exploits (LLM) -- findings come back tagged, and ElevenLabs narrates the whole thing. MCP is load-bearing at runtime, not just during development.
-
-```
-speak/type -> ElevenLabs STT (or text) -> orchestrator LLM -> MCP tool selection -> ghost execution (static + Playwright runtime + generative) -> findings -> ElevenLabs TTS narration
-```
-
-## What you see
-
-The target app renders as a **repo graph** (files / modules / endpoints as nodes, data and control flow as edges). Ghost sprites crawl along the edges toward target nodes; on a successful breach the node pulses and reveals the proof (the winning payload plus the target's leaked response) and its real classification (OWASP LLM Top 10 / MITRE ATLAS / CWE). Exorcising a ghost (a blue-team fix) turns the node blue.
-
-## Attack surface
-
-Primarily **AI vulnerabilities**: prompt injection, jailbreaks, RAG data exfiltration / poisoning, agent / tool hijacking, insecure output handling. Also supports **classic application vulnerabilities** (XSS, SQL injection, hardcoded secrets, weak crypto) as a secondary surface.
-
-## Tech stack
-
-**Frontend:** React + Vite + TypeScript, Tailwind CSS, Framer Motion, React Flow (the repo-graph), Zustand + TanStack Query, the ElevenLabs client SDK (Web Speech API fallback).
-
-**Backend:** Python + FastAPI, SQLAlchemy + Alembic, SQLite (MVP) to Postgres (final), cryptography (Fernet key vault), an MCP server exposing the ghost-crew tools, LLM provider adapters (OpenAI / Anthropic / Gemini), and **Playwright** as the live runtime agent.
-
-**Voice:** ElevenLabs TTS (narration + target speech) and STT (voice commands), plus typed input. See [docs/TECH_STACK.md](docs/TECH_STACK.md).
+See [the brainstorming and design tradeoffs](docs/MVP_BRAINSTORM.md) and [the four-week MVP plan](docs/MILESTONES.md).
 
 ## Kiro usage
 
-Built with Kiro and demonstrating deep, honest usage: spec-driven development for the UI, vibe coding for the red-team / agent logic (the inverted pattern, documented), an agent hook that auto-generates a new attack-class / check rule when added to a spec, MCP for both development-time reference and the runtime agentic loop, steering docs for consistency, property-based testing for detection rules, and multi-agent orchestration (the ghost crew). See [docs/KIRO_USAGE.md](docs/KIRO_USAGE.md).
+Kage Crew is built with Kiro through spec-driven development and documented implementation decisions. See [docs/KIRO_USAGE.md](docs/KIRO_USAGE.md).
 
 ## Documentation
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [docs/TECH_STACK.md](docs/TECH_STACK.md)
-- [docs/MILESTONES.md](docs/MILESTONES.md)
-- [docs/KIRO_USAGE.md](docs/KIRO_USAGE.md)
-- [MVP brainstorming](docs/MVP_BRAINSTORM.md) and [four-week scope](docs/MILESTONES.md)
-- `.kiro/specs/specter/` -- requirements and design
+- [Architecture](docs/ARCHITECTURE.md)
+- [Tech stack](docs/TECH_STACK.md)
+- [MVP brainstorming](docs/MVP_BRAINSTORM.md)
+- [Four-week plan](docs/MILESTONES.md)
+- [Kiro usage](docs/KIRO_USAGE.md)
+- [Requirements and design specs](.kiro/specs/kage-crew/)
 
 ## License
 
-MIT -- see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).

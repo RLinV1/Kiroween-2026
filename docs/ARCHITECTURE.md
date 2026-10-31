@@ -1,77 +1,73 @@
-﻿# Architecture
+# Kage Crew Architecture (MVP)
 
-## The chimera (why it is a Frankenstein)
+## Product shape
 
-Kage Crew combines security approaches that normally live in separate tools:
+Kage Crew is a graph-based security workbench with two distinct targets: a public GitHub repository for read-only source checks, and a hosted, intentionally vulnerable lab for active browser attacks. A bounded coordinator dispatches three ghost crews—Code Scout, Web Attack, and RAG Attack—and a blue-team Ghostbusters crew that verifies evidence and retests fixes. A public repository is never executed, and attack crews target only the Kage Crew lab in the MVP.
 
-- Static source analysis (deterministic, no AI) -- what the code IS.
-- Live runtime driving via Playwright (a browser agent that clicks/types/reads) -- what the app DOES.
-- Generative adversarial LLM attacks (probabilistic, creative) -- what an attacker could invent.
-- Voice OR typed orchestration (human intent -> machine swarm).
-- A static code graph animated by a living swarm (spatial vs behavioral).
-- Red team <-> blue team (attack and defend in one loop).
+## Orchestrated scan
 
-Incompatible pairs: source-as-text vs runtime-as-living-behavior; deterministic rules vs generative AI; human conversation vs autonomous machine swarm; attack vs defend. The cross-check is the unexpected power: the deterministic engine confirms generative findings (kills false positives) and the generative engine probes what the static engine flags (goes deeper). No single approach is a real red team; stitched, they are.
+The coordinator creates a bounded workflow graph and dispatches fixed crews:
 
-## High-level components
+1. **Code Scout crew** validates and fetches a public GitHub snapshot, inventories supported languages, then runs deterministic secret, dependency, and common source checks. It does not execute repository code. Findings include file/line evidence; secrets are redacted.
+2. **Web Attack crew** uses Playwright and safe deterministic checks against the lab's vulnerable SQL and XSS routes.
+3. **RAG Attack crew** attacks the lab chat with bounded, response-informed prompt injections. The judge can ingest one Markdown or text document into the lab's real retrieval path to demonstrate poisoning and leakage.
+4. **Ghostbusters crew** verifies each reported finding using deterministic proof rules and performs the blue-team retest after a fix. The language model can propose/adapt prompts, but cannot declare its own success.
 
-- React frontend -- repo-graph viz (React Flow), voice/text bar, findings console, red/blue toggle.
-- FastAPI backend -- auth, tenants, vault, providers, RAG, orchestrator, ghosts, MCP server, threat-intel, voice, findings, jobs, runtime agent.
-- Orchestrator LLM (BYO) -- interprets intent, discovers and calls MCP tools.
-- Ghost-crew MCP server -- exposes attack tools (static analyzer, runtime agent, dynamic fuzzer, RAG extractor, classic scanner, data mapper).
-- Target AI app -- bundled sample vulnerable agent, or the user endpoint.
-- LLM providers -- OpenAI / Anthropic / Gemini.
+The code scan and lab attacks may run in parallel. The coordinator tracks status, limits, errors, and dependencies; crews cannot choose arbitrary targets or spawn unbounded agents. Findings flow into one report and graph. Retest dispatches the relevant check again after the judge applies a prepared lab fix.
 
-## The agentic core (voice/text -> LLM -> MCP -> tools)
+Each crew has a distinct role, bounded tools, and visible run state. The RAG Attack crew uses the configured LLM for adaptive prompts; Code Scout and Web Attack use deterministic analysis/check packs, and Ghostbusters use deterministic proof rules. This keeps the orchestration multi-agent without making model calls responsible for every security verdict.
 
-1. User speaks (ElevenLabs STT) or types a command.
-2. The orchestrator LLM (BYO key) interprets intent.
-3. The orchestrator connects to the ghost-crew MCP server, which exposes attack capabilities as tools.
-4. The orchestrator decides which tools to call and in what order, invoking them via MCP.
-5. Ghost tools execute:
-   - static_analyzer -- reads the target source / prompt flow for injection paths.
-   - runtime_agent -- Playwright drives the live app like an attacker (navigate, click, type, read responses).
-   - dynamic_fuzzer -- the attacker LLM generates and fires injection / jailbreak payloads.
-   - rag_extractor -- prompts the target to exfiltrate RAG content.
-   - classic_scanner -- classic vuln checks (secrets, injection).
-   - data_mapper -- tags a finding with OWASP LLM Top 10 / MITRE ATLAS / CWE.
-6. Findings stream to the UI; the repo graph animates ghosts toward nodes; breaches reveal proof.
-7. ElevenLabs TTS narrates the orchestration and reads findings.
+```mermaid
+flowchart LR
+    U[GitHub URL + scan request] --> O[Coordinator]
+    O --> C[Code Scout crew]
+    O --> W[Web Attack crew<br/>Playwright: SQLi, XSS]
+    O --> A[RAG Attack crew<br/>Prompt injection, leakage]
+    C --> V[Ghostbusters<br/>Verify + retest]
+    W --> V
+    A --> V
+    V --> G[Graph + findings]
+    G --> F[Prepared fix + retest]
+    F --> O
+```
 
-## Red-team to blue-team loop
+## Run flow
 
-- Red team: orchestrator dispatches ghosts under an attack budget; ghosts attack; findings + proof recorded; ghosts tagged.
-- Blue team: each finding -> suggested mitigation; user applies; orchestrator re-invokes the relevant ghost (including the runtime agent re-driving the live app) to re-test; result = exorcised (fixed) or persists.
-- The loop is visible in the UI (graph + findings console + mode toggle).
+1. Judge pastes a public GitHub URL and starts a scan.
+2. Code Scout analyzes the repository snapshot; Web Attack and RAG Attack crews test the hosted lab. The UI labels these as separate targets.
+3. Crews emit progress and evidence nodes. Ghosts move only along workflow and target relationships observed by the run.
+4. Ghostbusters record confirmed, not reproduced, unsupported, or error states. Confirmed findings show source/page, check, observed evidence, and relevant OWASP mapping.
+5. Judge applies a prepared fix in the lab and retests. Ghostbusters capture a finding ghost only when the corresponding verifier confirms the issue no longer reproduces; otherwise it remains.
+6. ElevenLabs narration may announce progress and findings if configured. Typed controls and visible status remain available without voice.
 
-## Multi-tenancy & data isolation
+## Safety and limits
 
-- A tenant is a user account. Every table carries tenant_id; all queries scoped by tenant via a dependency/middleware.
-- LLM keys encrypted at rest (Fernet) with a server master key; never returned to the frontend; never logged.
-- RAG documents and findings stored with tenant_id; cross-tenant access blocked and tested.
-- MVP: per-account isolation. Org-level multi-tenancy is stretch.
+- GitHub input accepts public repositories only, with archive size, file count, and runtime limits. Never execute repository code, install its dependencies, or expose secret values in output.
+- Active attacks target only the bundled lab in the public MVP. The submitted repository is not treated as a live app.
+- SQLi and XSS checks use non-destructive test cases and synthetic data. RAG documents and canaries are isolated to the lab.
+- Bound prompt count, response size, runtime, browser navigation, scan concurrency, and model usage.
+- Show unsupported languages and unavailable checks explicitly; accepting a repository URL does not claim complete coverage.
+- Map prompt injection and confirmed synthetic data disclosure to the relevant OWASP LLM categories. Map conventional findings to applicable OWASP Web Application categories; do not claim full coverage.
 
-## Provider-adapter layer (BYO LLM)
+## Hosted deployment
 
-- A provider interface: complete(prompt, **opts) -> response, with adapters for OpenAI, Anthropic, Gemini.
-- One key can serve target + orchestrator + attacker, or separate keys.
-- Optional LiteLLM normalizes calls across providers.
-- Keys validated on save; clear errors on failure.
+Use a version-pinned Docker service on Google Cloud Run for the UI/API, security lab, and Playwright Chromium runtime. Add a health endpoint, one-at-a-time scan control, request and archive limits, and visible errors. Keep a local Docker run path for the same app and lab.
 
-## Data model
+## MVP components
 
-- tenants(id, email, password_hash, created_at)
-- llm_keys(id, tenant_id, provider, encrypted_key, label, created_at)
-- documents(id, tenant_id, filename, content, chunks, created_at)
-- targets(id, tenant_id, name, kind [sample|endpoint], config)
-- attacks(id, tenant_id, target_id, ghost_class, status, budget, started_at)
-- findings(id, tenant_id, attack_id, ghost_class, owasp_tag, atlas_tag, cwe_tag, severity, payload, leaked_response, mitigation, retest_status)
-- voice_sessions(id, tenant_id, transcript, created_at)
+- **Coordinator:** bounded graph workflow that dispatches crews, aggregates events, and starts evidence-backed retests.
+- **Repo intake and code checks:** read-only public GitHub snapshot and deterministic secret, dependency, and common source checks.
+- **Web Attack crew:** Playwright tests for SQLi and XSS against the fixed lab routes.
+- **RAG Attack crew:** one model-backed specialist that performs bounded, adaptive prompt-injection attempts against the lab's retrieval chat.
+- **Ghostbusters:** deterministic verification for source matches, harmless browser effects, and canary exposure, followed by retest after a fix.
+- **Lab:** deliberately vulnerable web routes plus a RAG chat, isolated synthetic data, one-document Markdown/text ingestion, and prepared remediations.
+- **Graph:** coordinator, crews, repository files, lab pages, retrieved chunks, findings, and evidence appear as nodes connected by observed run events.
+- **Voice:** optional ElevenLabs TTS; STT and voice commands are deferred.
 
-## Security
+## Model credentials
 
-- Encrypt user keys at rest; never echo key values; never log secrets; reference by name/label only.
-- Enforce tenant_id on every query; isolation covered by tests early.
-- Attacks scoped to the target the user owns (their own app/RAG) -- a red-team tool for your own systems.
-- Enforce attack budgets and timeouts to control LLM spend and prevent runaway loops.
-- Treat leaked responses as sensitive data.
+Use one developer-configured server-side provider credential stored as a Cloud Run secret. Enforce strict request and token budgets; never expose or log the key. Deterministic source and browser checks remain usable if model access is unavailable. Mark the RAG Attack crew unavailable rather than substituting scripted prompts and claiming autonomy.
+
+## Deferred
+
+Arbitrary live website attacks, private repository access, execution of submitted code, local development CLI, broad language coverage, unrestricted crawling, multi-tenant accounts, multiple model providers, MCP discovery, automatic source edits, persistent history, and live threat intelligence.

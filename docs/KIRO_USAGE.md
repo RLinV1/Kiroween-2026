@@ -1,28 +1,19 @@
-﻿# Kiro Usage
+# Kiro Usage
 
-Kage Crew is built with Kiro and demonstrates deep, honest usage across the feature set. This is both a scoring lever and the required writeup.
+Kage Crew is being built with Kiro for Kiroween 2026's Frankenstein category. Specs keep the one-month MVP aligned: a bounded multi-agent coordinator combines read-only public-repository checks with active testing against a separate hosted lab.
 
-## Spec-driven development (UI)
-Structured requirements, design, and tasks for the frontend. Kiro implements the repo-graph UI, findings console, and voice/text bar from specs. See `.kiro/specs/specter/`.
+## Spec-driven scope
 
-## Vibe coding (red-team / agent logic)
-The orchestrator and ghost logic are built conversationally and iteratively, because "attack like a red team" is abstract and benefits from injected human judgment. This is the inverted pattern: specs for the UI, vibe coding for the hard reasoning logic. We document the reasoning.
+Requirements and design live in `.kiro/specs/kage-crew/`. They define the Code Scout, Web Attack, and RAG Attack ghost crews, the Ghostbusters blue team, the fixed workflow graph, input/target limits, finding evidence, and hosted deployment.
 
-## Agent hooks
-A hook auto-generates a new ghost / MCP tool skeleton plus its detection rule whenever a new attack class is added to a spec. Applied to attack tools.
+## Agentic security behavior
 
-## MCP (dev-time + runtime)
-- Dev-time: Kiro connects to security reference data (OWASP, MITRE, NVD docs) during the build.
-- Runtime: the ghost crew itself is an MCP server -- the orchestrator LLM discovers and invokes attack tools via MCP at runtime. MCP is load-bearing in the product, not just the build, which doubles the story.
+The coordinator dispatches distinct ghost crews and tracks their progress. The RAG Attack crew may use the target's observed responses to select a bounded follow-up prompt. Playwright attacks only the hosted lab; repository code is never executed. The Ghostbusters verify findings and decide whether retests clear them. The LLM does not grade its own success. Attempts, time, and model usage are capped.
 
-## Steering docs
-`.kiro/steering/` enforces architecture, attack-rule consistency, and code style across the build.
+## Honest MVP boundaries
 
-## Property-based testing (PBT)
-PBT verifies that detection rules do not false-positive and that mitigations hold against property-based injection payloads -- a genuine, impressive use that a wrapper project cannot replicate.
+The hosted demo accepts a public GitHub repository for read-only source checks and directs active attacks only to the separate lab. Its AI tests follow OWASP Top 10 for LLM Applications 2026: LLM01:2026 is the attack class, and LLM02:2026 is noted only when the canary is exposed. See `docs/OWASP_MAPPING.md`. The project does not claim complete OWASP coverage. The model key is a server-side deployment secret; the judge does not provide credentials. ElevenLabs narration is optional, while typed controls and visible results remain available.
 
-## Multi-agent orchestration
-The ghost crew (static analyzer, runtime agent, dynamic fuzzer, RAG attacker, classic scanner, data mapper) plus the orchestrator form an agent squad, orchestrated through MCP.
+## Kiro practices
 
-## Honest failures (documented)
-We document where Kiro's eagerness to pass tests caused issues (over-broad try/except, import-only tests, None-returns to satisfy types) and how we audited for them.
+Use Kiro specs for product constraints and interface behavior, and iterative agent-assisted development for crew boundaries, attack prompts, and response handling. Keep decisions and limitations documented. The coordinator, named ghost crews, and Ghostbusters retest behavior are MVP requirements; extra crews, hooks, and MCP integrations are not.

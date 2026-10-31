@@ -2,49 +2,51 @@
 
 ## Product goal
 
-Kage Crew is a web security workbench built around a crew of AI-assisted security agents. It scans a supplied code project and uses Playwright to exercise its running website. A graph shows the project and pages the crew has observed, the checks moving through them, and where findings were detected. ElevenLabs provides voice commands and narration.
+Deliver a judge-ready, deployed security workbench where a bounded coordinator dispatches Code Scout, Web Attack, and RAG Attack ghost crews, then calls in the Ghostbusters to verify and retest. A public GitHub URL feeds read-only source checks; a separate hosted lab receives active SQLi, XSS, and AI/RAG attacks. The graph follows real crew events and evidence. The demo does not execute submitted repositories or attack arbitrary websites.
 
-The MVP is a bounded security sweep informed by the OWASP Top 10 for web applications. It will implement a small, explicit set of checks and map each one to the relevant OWASP category. It will not claim complete coverage of all ten categories or guarantee that a target is secure.
+Map findings to relevant OWASP categories and mark unsupported coverage clearly. Display all ten OWASP LLM risks, but label unimplemented risks **Not tested in this demo**. See [OWASP mapping](OWASP_MAPPING.md).
 
-## MVP scope
+## Four-week plan
 
-- **Working demo URL:** deploy the frontend and scan service, with a bundled sample project and intentionally vulnerable demo website that judges can scan without uploading their own code. Keep development and local testing supported.
-- **Code scan:** accept a project archive or connect to the bundled sample. Run a small deterministic roster for clear issues such as exposed secrets and selected unsafe patterns. Show file and line evidence when available.
-- **Playwright scan:** exercise the bundled demo site, navigate a bounded set of same-origin pages, inspect forms, and run safe checks. Show the URL, action, and observed evidence for every result. No destructive actions or unrestricted crawling.
-- **OWASP mapping:** use the OWASP Top 10 for web applications as the organizing framework. Include only categories the implemented checks actually examine; label the rest as not covered in this MVP.
-- **Agent crew:** provide distinct code and browser agents with bounded tasks, request budgets, and timeouts. AI can help prioritize or explain results, but the initial finding roster must be based on observable evidence.
-- **Graph:** show project files/modules and pages/forms as nodes. Add edges only for relationships observed by the scanner. Animate each ghost along the nodes it checks and highlight evidence on the affected node.
-- **Findings and retest:** show severity, OWASP category, evidence, explanation, and remediation guidance. Let the user rerun a check and compare its result after a fix; report observations without promising complete remediation.
-- **Voice:** ElevenLabs handles a small command set and reads progress/findings aloud. Typed controls remain available. The deployed demo should degrade clearly if voice credentials or service access are unavailable.
-- **LLM connection:** keep model access to one supported path for the demo. Evaluate Sign in with ChatGPT plan usage for local/open-source use; do not make it a prerequisite for a judge to try the bundled deterministic checks.
-- **Safe hosted target:** the public demo scans only its bundled, intentionally vulnerable target. Arbitrary URL scanning is limited to local development or explicitly authorized targets, with clear scope and request limits.
+| Week | Outcome |
+|---|---|
+| **1 — live foundation** | Deploy the lab and Playwright runner to Cloud Run. Accept bounded public GitHub snapshots without executing code. Prove one real code finding and one real hosted browser check. |
+| **2 — crews and coordinator** | Implement the fixed workflow graph: Code Scout, Web Attack, and RAG Attack crews, plus Ghostbusters for verification. Return progress, partial results, and explicit unsupported/error states. |
+| **3 — RAG and visible proof** | Add one-document Markdown/text ingestion, actual retrieval, bounded adaptive prompt injection, canary verification, SQLi/XSS proof, graph evidence links, prepared lab fixes, and per-finding retests. |
+| **4 — judge-ready finish** | Stabilize Cloud Run, cap resource/model spend, polish graph and ghost/Ghostbuster feedback, verify reduced-motion/status states, and prepare the three-minute demo walkthrough. Add ElevenLabs narration only if the core path is solid. |
 
-## Four-week sequence
+**End-of-month success:** a judge pastes a public repository URL, sees source findings, watches the attack crews test the separate live lab, inspects evidence, applies a prepared fix, and sees the verified retest reflected in the graph—all without local setup or personal credentials.
 
-### Week 1 — scan spine
+## Demo flow
 
-Define the supported project input and first check roster. Build the bundled vulnerable website, run one code check and one Playwright check, and return evidence in a basic results view.
+1. Enter a public GitHub URL and start the scan.
+2. The coordinator dispatches Code Scout for a bounded read-only snapshot. In parallel, Web Attack tests the lab's SQLi and XSS routes, while RAG Attack tests its retrieval chat.
+3. The judge can ingest one small `.txt` or `.md` document into the RAG lab to demonstrate live poisoning/retrieval behavior.
+4. Crews return evidence. Ghostbusters mark each result confirmed, not reproduced, unsupported, or errored; the LLM never decides whether its own attack succeeded.
+5. Ghosts move along observed graph edges. Confirmed issues haunt their nodes; findings show target, check, evidence, OWASP mapping, and suggested fix.
+6. The judge applies a prepared lab fix and retests. Ghostbusters capture a finding ghost only when the corresponding check confirms resolution.
 
-### Week 2 — bounded sweep and graph
+The GitHub repository and hosted lab are separate targets, and the interface must say so. A GitHub link does not imply the submitted application was run or dynamically attacked.
 
-Add the selected checks, safe same-origin navigation, OWASP mapping, and graph nodes for files and observed pages. Show scan progress and attach findings to graph nodes.
+## Deployment and safety
 
-### Week 3 — agent crew and voice
+- Deploy one version-pinned Docker service to Google Cloud Run with UI/API, lab, and matching Playwright Chromium dependencies.
+- Keep health/status endpoints, one bounded scan at a time, request/archive/file/runtime limits, and visible failure states.
+- Accept public GitHub repositories only. Never execute code, install packages, follow repo-provided links, or show full secret values.
+- Allow active browser attacks only against the hosted lab. Use synthetic data and non-destructive SQLi/XSS proof cases.
+- Store the provider credential server-side as a Cloud Run secret; cap calls and clearly mark the RAG Attack crew unavailable if the key is missing.
+- Keep a local Docker flow for development. A CLI for users' local apps and arbitrary live-site attacks are future work.
 
-Give checks distinct ghost identities and animate them through the graph. Add ElevenLabs narration and a small set of voice commands, with typed controls and audio-off support.
+## Must-have / cutline
 
-### Week 4 — retest and deploy
+Must ship: public demo URL, public-repo code scan with evidence, hosted lab with at least one verified SQLi or XSS finding, real RAG retrieval plus one bounded prompt-injection/leakage run, coordinator showing distinct crew activity, graph/evidence view, and a working Ghostbusters fix/retest.
 
-Add per-finding reruns, before/after status, common error handling, deployment of the judge-ready demo, setup documentation, and a short demo path.
+Cut first if time runs short: voice, broad source-language coverage, extra attack variations, elaborate graph edges, private repos, arbitrary targets, and local CLI. Keep worker roles visible, the evidence verifier, and one end-to-end fix/retest path.
 
-## Deferred
+## Scope limits
 
-- Complete OWASP Top 10 coverage or a claim of general-purpose security auditing.
-- Unrestricted autonomous attack generation, arbitrary target crawling, destructive testing, or scanning without authorization.
-- Broad support for uploads of arbitrary repositories, private repository integrations, production multi-tenant accounts, and durable user history.
-- Multiple LLM vendors, RAG uploads/poisoning, live threat feeds, persistent agent memory, and exhaustive vulnerability catalogs.
-- Automatic code changes or claims that passing retests prove a site is secure.
-
-## Acceptance demo
-
-From the submitted demo URL, a judge starts a scan of the bundled sample. They see code and Playwright ghosts traverse the graph, open findings with file/page evidence and relevant OWASP categories, hear ElevenLabs narrate progress, then rerun a check after applying a sample fix and compare the result. The core demo remains usable without voice and takes about five minutes.
+- No claim of full OWASP Top 10 coverage or a general-purpose penetration test.
+- No arbitrary live-site scans, unrestricted crawling, destructive tests, or unauthorized use.
+- No execution of submitted GitHub code, private-repository support, or automatic source edits.
+- No multi-tenant accounts, multiple providers, runtime MCP discovery, persistent history, or live threat feeds.
+- The coordinator dispatches only fixed worker types with bounded inputs and budgets; worker/model claims are not findings without verifier evidence.
